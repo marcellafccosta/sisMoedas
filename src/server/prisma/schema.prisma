@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model aluno {
+  idaluno     Int         @id @default(autoincrement())
+  cpf         String      @unique @db.VarChar(14)
+  rg          String      @db.VarChar(12)
+  endereco_id Int?
+  curso       String?     @db.VarChar(255)
+  saldomoedas Float?
+  endereco    endereco?   @relation(fields: [endereco_id], references: [idendereco], onDelete: NoAction, onUpdate: NoAction, map: "fk_endereco_aluno")
+  transacao   transacao[]
+}
+
+model empresaparceira {
+  idempresa   Int        @id @default(autoincrement())
+  cnpj        String     @unique @db.VarChar(18)
+  nomeempresa String     @db.VarChar(255)
+  vantagem    vantagem[]
+}
+
+model endereco {
+  idendereco  Int           @id @default(autoincrement())
+  logradouro  String        @db.VarChar(255)
+  bairro      String        @db.VarChar(255)
+  cidade      String        @db.VarChar(255)
+  estado      String        @db.VarChar(255)
+  numero      Int?
+  complemento String?       @db.VarChar(255)
+  cep         String?       @db.VarChar(10)
+  aluno       aluno[]
+  instituicao instituicao[]
+  professor   professor[]
+}
+
+model instituicao {
+  idinstituicao Int         @id @default(autoincrement())
+  nome          String      @db.VarChar(255)
+  endereco_id   Int?
+  endereco      endereco?   @relation(fields: [endereco_id], references: [idendereco], onDelete: NoAction, onUpdate: NoAction, map: "fk_endereco_instituicao")
+  professor     professor[]
+}
+
+model professor {
+  idprofessor    Int           @id @default(autoincrement())
+  cpf            String        @unique @db.VarChar(14)
+  departamento   departamento?
+  instituicao_id Int?
+  saldomoedas    Float?
+  usuario_id     Int?
+  endereco_id    Int?
+  endereco       endereco?     @relation(fields: [endereco_id], references: [idendereco], onDelete: NoAction, onUpdate: NoAction, map: "fk_endereco")
+  instituicao    instituicao?  @relation(fields: [instituicao_id], references: [idinstituicao], onDelete: NoAction, onUpdate: NoAction, map: "fk_instituicao")
+  usuario        usuario?      @relation(fields: [usuario_id], references: [idusuario], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario")
+  transacao      transacao[]
+}
+
+model transacao {
+  idtransacao  Int           @id @default(autoincrement())
+  tipo         tipotransacao
+  quantidade   Int
+  data         DateTime      @db.Timestamp(6)
+  aluno_id     Int?
+  professor_id Int?
+  aluno        aluno?        @relation(fields: [aluno_id], references: [idaluno], onDelete: NoAction, onUpdate: NoAction, map: "fk_aluno")
+  professor    professor?    @relation(fields: [professor_id], references: [idprofessor], onDelete: NoAction, onUpdate: NoAction, map: "fk_professor")
+}
+
+model usuario {
+  idusuario Int         @id @default(autoincrement())
+  nome      String      @db.VarChar(255)
+  email     String      @unique @db.VarChar(255)
+  senha     String      @db.VarChar(255)
+  professor professor[]
+}
+
+model vantagem {
+  idvantagem         Int              @id @default(autoincrement())
+  descricao          String           @db.VarChar(255)
+  customoedas        Float
+  foto               String?          @db.VarChar(255)
+  empresaparceira_id Int?
+  empresaparceira    empresaparceira? @relation(fields: [empresaparceira_id], references: [idempresa], onDelete: NoAction, onUpdate: NoAction, map: "fk_empresaparceira")
+}
+
+enum departamento {
+  Ensino
+  Financeiro
+  Orienta__o_        @map("Orientação ")
+  Coordena__o        @map("Coordenação")
+  Registro_Acad_mico @map("Registro Acadêmico")
+  Administrativo
+  Extens_o           @map("Extensão")
+}
+
+enum tipotransacao {
+  EnvioMoedas
+  RecebimentoMoedas
+  TrocaMoedas
+}
