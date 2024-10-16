@@ -1,0 +1,38 @@
+/* Login.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+
+.ant-form {
+    padding: 16px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .ant-form-item {
+    margin-bottom: 16px;
+  }
+  
+ 
+  
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f2f5;
+  }
+  
+  .form {
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 360px;
+  }
+  
