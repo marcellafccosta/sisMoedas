@@ -47,7 +47,6 @@ model professor {
 model empresaparceira {
   idempresa        Int              @id @default(autoincrement())
   cnpj             String           @unique @db.VarChar(18)
-  nomeempresa      String           @db.VarChar(255)
   usuario_id       Int              @unique
   usuario          usuario          @relation(fields: [usuario_id], references: [idusuario], onDelete: Cascade)
   vantagem         vantagem[]
