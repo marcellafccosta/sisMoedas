@@ -37,96 +37,96 @@ const Cadastro = () => {
     };
 
     return (
-        <Form
-            form={form}
-            name="register"
-            onFinish={onFinish}
-            style={{
-                maxWidth: 400,
-            }}
-            scrollToFirstError
-        >
-            <Form.Item
-                name="nome"
-                label="Nome completo"
-
-                rules={[
-                    {
-                        required: true,
-                        message: 'Por favor, insira seu nome completo!',
-                    },
-                ]}
+        <div className="cadastro-container">
+            <Form
+                form={form}
+                name="register"
+                onFinish={onFinish}
+                className="cadastro-form"
+                scrollToFirstError
             >
-                <Input placeholder="Nome Completo"/>
-            </Form.Item>
+                <div className="cadastro-title">Cadastro</div>
 
-            <Form.Item
-                name="email"
-                label="E-mail"
-                rules={[
-                    {
-                        type: 'email',
-                        message: 'E-mail inválido!',
-                    },
-                    {
-                        required: true,
-                        message: 'Por favor, insira seu e-mail!',
-                    },
-                ]}
-            >
-                <Input placeholder="E-mail" />
-            </Form.Item>
-
-            <Form.Item
-                name="senha"
-                label="Senha"
-                rules={[
-                    {
-                        required: true,
-                        message: 'Por favor, insira sua senha!',
-                    },
-                ]}
-                hasFeedback
-            >
-                <Input.Password placeholder="Senha" />
-            </Form.Item>
-
-            <Form.Item
-                name="confirm"
-                label="Confirme sua senha"
-                dependencies={['senha']}
-                hasFeedback
-                rules={[
-                    {
-                        required: true,
-                        message: 'Por favor, confirme sua senha!',
-                    },
-                    ({ getFieldValue }) => ({
-                        validator(_, value) {
-                            if (!value || getFieldValue('senha') === value) {
-                                return Promise.resolve();
-                            }
-                            return Promise.reject(new Error('As senhas não coincidem!'));
+                <Form.Item
+                    name="nome"
+                    label="Nome completo"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Por favor, insira seu nome completo!',
                         },
-                    }),
-                ]}
-            >
-                <Input.Password placeholder="Confirme sua senha" />
-            </Form.Item>
+                    ]}
+                >
+                    <Input placeholder="Nome Completo" />
+                </Form.Item>
 
+                <Form.Item
+                    name="email"
+                    label="E-mail"
+                    rules={[
+                        {
+                            type: 'email',
+                            message: 'E-mail inválido!',
+                        },
+                        {
+                            required: true,
+                            message: 'Por favor, insira seu e-mail!',
+                        },
+                    ]}
+                >
+                    <Input placeholder="E-mail" />
+                </Form.Item>
 
-            <Form.Item>
-                <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
-                    Cadastrar
-                </Button>
-                <div className='possuiConta' style={{ marginTop: '10px', textAlign: 'center' }}>
-                    Já possui uma conta?{' '}
-                    <Button type="link" onClick={handleLoginClick}>
-                        Login
+                <Form.Item
+                    name="senha"
+                    label="Senha"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Por favor, insira sua senha!',
+                        },
+                    ]}
+                    hasFeedback
+                >
+                    <Input.Password placeholder="Senha" />
+                </Form.Item>
+
+                <Form.Item
+                    name="confirm"
+                    label="Confirme sua senha"
+                    dependencies={['senha']}
+                    hasFeedback
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Por favor, confirme sua senha!',
+                        },
+                        ({ getFieldValue }) => ({
+                            validator(_, value) {
+                                if (!value || getFieldValue('senha') === value) {
+                                    return Promise.resolve();
+                                }
+                                return Promise.reject(new Error('As senhas não coincidem!'));
+                            },
+                        }),
+                    ]}
+                >
+                    <Input.Password placeholder="Confirme sua senha" />
+                </Form.Item>
+
+                <Form.Item>
+                    <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
+                        Cadastrar
                     </Button>
-                </div>
-            </Form.Item>
-        </Form>
+                    <div className='possuiConta'>
+                        Já possui uma conta?{' '}
+                        <Button type="link" onClick={handleLoginClick}>
+                            Login
+                        </Button>
+                    </div>
+                </Form.Item>
+            </Form>
+        </div>
     );
 };
 
