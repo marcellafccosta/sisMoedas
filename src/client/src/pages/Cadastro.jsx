@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router-dom';
 
 const Cadastro = () => {
     const [form] = Form.useForm();
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
 
     const handleLoginClick = () => {
-        navigate('/login'); 
+        navigate('/login');
     };
 
     const handleSubmit = async (values) => {
@@ -25,7 +25,7 @@ const Cadastro = () => {
                 throw new Error('Falha ao cadastrar usuário');
             } else {
                 alert('Usuário cadastrado com sucesso!');
-                form.resetFields(); // Reseta os campos do formulário
+                form.resetFields();
             }
         } catch (error) {
             alert(error.message);
@@ -49,6 +49,7 @@ const Cadastro = () => {
             <Form.Item
                 name="nome"
                 label="Nome completo"
+
                 rules={[
                     {
                         required: true,
@@ -56,7 +57,7 @@ const Cadastro = () => {
                     },
                 ]}
             >
-                <Input />
+                <Input placeholder="Nome Completo"/>
             </Form.Item>
 
             <Form.Item
@@ -73,7 +74,7 @@ const Cadastro = () => {
                     },
                 ]}
             >
-                <Input />
+                <Input placeholder="E-mail" />
             </Form.Item>
 
             <Form.Item
@@ -87,7 +88,7 @@ const Cadastro = () => {
                 ]}
                 hasFeedback
             >
-                <Input.Password />
+                <Input.Password placeholder="Senha" />
             </Form.Item>
 
             <Form.Item
@@ -110,8 +111,9 @@ const Cadastro = () => {
                     }),
                 ]}
             >
-                <Input.Password />
+                <Input.Password placeholder="Confirme sua senha" />
             </Form.Item>
+
 
             <Form.Item>
                 <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
