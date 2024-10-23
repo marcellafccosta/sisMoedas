@@ -1,0 +1,42 @@
+/* Extrato.css */
+
+.extrato-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh; 
+    margin: 0;
+}
+
+.saldo-card {
+    text-align: center;
+    background-color: #f0f2f5;
+    border: 1px solid #0f4c75;
+    width: 500px;
+}
+
+.saldo-card h2 {
+    font-size: 2rem;
+    color: #0f4c75;
+    
+}
+
+.button-group {
+    text-align: center;
+}
+
+.button-group .ant-btn {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+}
+
+.button-group .ant-btn-primary {
+    background-color: #0f4c75;
+    border-color: #0f4c75;
+}
+
+.button-group .ant-btn-primary:hover {
+    background-color: #0f4c75;
+    border-color: #0f4c75;
+}

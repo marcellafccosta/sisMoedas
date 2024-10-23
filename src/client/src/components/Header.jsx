@@ -9,7 +9,7 @@ const { Header } = Layout;
 
 const AppHeader = () => {
     const navigate = useNavigate();
-    const idUsuario = 16; // Certifique-se de definir o idUsuario corretamente
+    const idUsuario = 16; //fixo
 
     const handleMenuClick = (path) => {
         navigate(path);
@@ -31,6 +31,11 @@ const AppHeader = () => {
             key: '3',
             label: 'Cadastro',
             onClick: () => handleMenuClick('/cadastro'),
+        },
+        {
+            key: '4',
+            label: 'Extrato',
+            onClick: () => handleMenuClick('/extrato'),
         },
     ];
 
