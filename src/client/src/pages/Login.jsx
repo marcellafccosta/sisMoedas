@@ -9,6 +9,10 @@ const Login = () => {
     console.log('Valores recebidos do formulário: ', values);
   };
 
+  const handleCadastroClick = () => {
+    navigate('/cadastro');
+  }
+
 
   const navigate = useNavigate(); 
 
@@ -20,17 +24,16 @@ const Login = () => {
         remember: true,
       }}
       style={{
-        maxWidth: 360,
-        margin: '0 auto',
+        maxWidth: 400,
       }}
       onFinish={onFinish}
     >
       <Form.Item
-        name="username"
+        name="email"
         rules={[
           {
             required: true,
-            message: 'Por favor, insira seu nome de usuário!',
+            message: 'Por favor, insira seu email',
           },
         ]}
       >
@@ -38,7 +41,7 @@ const Login = () => {
       </Form.Item>
 
       <Form.Item
-        name="password"
+        name="senha"
         rules={[
           {
             required: true,
@@ -52,10 +55,15 @@ const Login = () => {
   
 
       <Form.Item>
-        <Button block type="primary" htmlType="submit">
+        <Button block type="primary" htmlType="submit" style={{ width: '100%' }}>
           Entrar
         </Button>
-        ou <a href="/cadastro">Cadastre-se agora!</a>
+        <div style={{ marginTop: '10px', textAlign: 'center' }}>
+          Ainda não possui uma conta? {' '}
+          <Button type="link" onClick={handleCadastroClick}>
+          Cadastre-se!
+          </Button>
+        </div>
       </Form.Item>
     </Form>
   );
