@@ -1,0 +1,76 @@
+/* Header.css */
+
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    background: #0f4c75;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px; 
+    margin: 0 auto;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo-image {
+    height: 5rem; 
+    width: auto;
+    cursor: pointer;
+}
+
+.menu-desktop {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    background-color: transparent;
+}
+
+.user-actions {
+    display: flex;
+    align-items: center;
+}
+
+.user-actions .ant-btn {
+    background-color: #0f4c75;
+    border: none;
+    color: #ffffff;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.user-actions .ant-btn:hover {
+    background-color: #bbe1fa;
+    border-color: #bbe1fa;
+    color: #0f4c75;
+}
+
+/* Estilo do menu */
+.ant-menu-horizontal {
+    background-color: transparent;
+    color: white;
+    border-bottom: none;
+}
+
+.ant-menu-horizontal .ant-menu-item {
+    color: white;
+}
+
+.ant-menu-horizontal .ant-menu-item:hover {
+    color: #bbe1fa;
+}
+
+.ant-menu-horizontal .ant-menu-item-selected {
+    color: #bbe1fa;
+}

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Card, Descriptions, Button  } from 'antd';
+import { Card, Descriptions, Button } from 'antd';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
-import { useParams } from 'react-router-dom'; 
-// import "../styles/Perfil.css";
+import { useParams } from 'react-router-dom';
+import AppHeader from "../components/Header";
+import "../styles/Perfil.css"; 
 
 const Perfil = () => {
     const [profileData, setProfileData] = useState(null);
@@ -33,28 +34,32 @@ const Perfil = () => {
     }, [idUsuario]);
 
     return (
-        <Card
-            title="Perfil do Usuário"
-            style={{ maxWidth: 600, margin: '20px auto', borderRadius: '8px' }}
-        >
-            {profileData ? (
-                <Descriptions bordered column={1}>
-                    <Descriptions.Item label="Nome">{profileData.nome}</Descriptions.Item>
-                    <Descriptions.Item label="E-mail">{profileData.email}</Descriptions.Item>
-                    <Descriptions.Item label="Senha">
-                        {showPassword ? profileData.senha : '******'}
-                        <Button 
-                            type="link" 
-                            onClick={togglePasswordVisibility}
-                            icon={showPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
-                            style={{ marginLeft: 10 }}
-                        />
-                    </Descriptions.Item>
-                </Descriptions>
-            ) : (
-                <p>Carregando dados do perfil...</p>
-            )}
-        </Card>
+        <>
+            <AppHeader />
+            <div className="profile-container">
+                <Card
+                    title="Perfil do Usuário"
+                    bordered
+                >
+                    {profileData ? (
+                        <Descriptions bordered column={1}>
+                            <Descriptions.Item label="Nome">{profileData.nome}</Descriptions.Item>
+                            <Descriptions.Item label="E-mail">{profileData.email}</Descriptions.Item>
+                            <Descriptions.Item label="Senha">
+                                {showPassword ? profileData.senha : '******'}
+                                <Button
+                                    type="link"
+                                    onClick={togglePasswordVisibility}
+                                    icon={showPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+                                    style={{ marginLeft: 10 }} />
+                            </Descriptions.Item>
+                        </Descriptions>
+                    ) : (
+                        <p>Carregando dados do perfil...</p>
+                    )}
+                </Card>
+            </div>
+        </>
     );
 };
 

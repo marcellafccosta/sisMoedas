@@ -1,0 +1,49 @@
+/* Cadastro.css */
+
+.cadastro-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw; /* Garante que ocupe toda a largura da tela */
+    height: 100vh; /* Garante que ocupe toda a altura da tela */
+    background: linear-gradient(135deg, #3282b8, #0f4c75);
+    padding: 20px;
+    margin: 0;
+}
+
+.cadastro-form {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+}
+
+.cadastro-title {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #0f4c75;
+}
+
+.ant-form-item {
+    margin-bottom: 15px;
+}
+
+.possuiConta {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+
+.possuiConta .ant-btn-link {
+    padding: 0;
+    font-weight: bold;
+    color: #3282b8;
+}
+
+.possuiConta .ant-btn-link:hover {
+    color: #0f4c75;
+}
