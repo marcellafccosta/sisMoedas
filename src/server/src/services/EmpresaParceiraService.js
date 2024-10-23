@@ -37,29 +37,54 @@ export class EmpresaParceiraService {
         }
     }
 
-    // Cria uma nova empresa parceira
+
     async createEmpresaparceira(empresaData) {
         try {
+            // Verifique se todos os campos obrigatórios foram preenchidos
+            if (!empresaData.cnpj) {
+                throw new Error("O CNPJ é obrigatório.");
+            }
+            if (!empresaData.usuario?.nome) {
+                throw new Error("O nome do usuário é obrigatório.");
+            }
+            if (!empresaData.usuario?.email) {
+                throw new Error("O e-mail do usuário é obrigatório.");
+            }
+            if (!empresaData.usuario?.senha) {
+                throw new Error("A senha do usuário é obrigatória.");
+            }
+    
+            // Criação da empresa
             const empresa = await prismaClient.empresaparceira.create({
                 data: {
                     cnpj: empresaData.cnpj,
                     usuario: {
-                        create: {  // Criar o usuário junto com os dados de empresa
-                            nome: empresaData.nome,   // Nome está sendo corretamente lido do corpo
-                            email: empresaData.email, // E-mail está sendo corretamente lido do corpo
-                            senha: empresaData.senha  // Senha está sendo corretamente lida do corpo
-                        }
-                    }
-                }
+                        create: {
+                            nome: empresaData.usuario.nome,
+                            email: empresaData.usuario.email,
+                            senha: empresaData.usuario.senha,
+                        },
+                    },
+                    // `vantagem` não é especificado para ficar vazio por padrão
+                },
+                include: {
+                    usuario: true,
+                    vantagem: true,  // Incluir vantagem para confirmar que está vazio no retorno
+                },
             });
+    
+            console.log('Empresa cadastrada com sucesso:', empresa); // Log do sucesso
             return empresa;
         } catch (error) {
             console.error("Erro ao cadastrar empresa parceira:", error.message);
             throw new Error("Erro ao cadastrar empresa parceira: " + error.message);
         }
     }
+    
+    
+    
 
-    // Atualiza uma empresa parceira
+
     async updateEmpresaparceira(empresaId, empresaData) {
         try {
             const updatedEmpresa = await prismaClient.empresaparceira.update({

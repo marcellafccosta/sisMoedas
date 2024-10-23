@@ -34,11 +34,17 @@ export class ProfessorService {
 
     async createProfessor(professorData) {
         try {
+            // Verificando se os dados de usuário estão presentes
+            if (!professorData.usuario || !professorData.usuario.nome || !professorData.usuario.email || !professorData.usuario.senha) {
+                throw new Error("Dados de usuário incompletos para o cadastro do professor.");
+            }
+    
+            // Criando o professor com os dados estruturados corretamente
             const professor = await prismaClient.professor.create({
                 data: {
                     cpf: professorData.cpf,
                     departamento: professorData.departamento,
-                    saldomoedas: professorData.saldomoedas,
+                    saldomoedas: professorData.saldomoedas || 0,
                     usuario: {
                         create: {
                             nome: professorData.usuario.nome,
@@ -48,7 +54,7 @@ export class ProfessorService {
                     },
                     instituicao: {
                         connect: {
-                            idinstituicao: professorData.instituicao_id  // Certifique-se de que o idinstituicao seja passado corretamente
+                            idinstituicao: parseInt(professorData.instituicao_id, 10)  // Convertendo para inteiro, se necessário
                         }
                     }
                 },
@@ -58,12 +64,15 @@ export class ProfessorService {
                 }
             });
     
+            console.log("Professor cadastrado com sucesso:", professor);
             return professor;
+    
         } catch (error) {
             console.error("Erro ao cadastrar professor: ", error.message);
             throw new Error("Erro ao cadastrar professor: " + error.message);
         }
     }
+    
     
 
     async updateProfessor(professorId, professorData) {

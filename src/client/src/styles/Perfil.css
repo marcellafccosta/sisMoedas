@@ -4,7 +4,7 @@
     justify-content: center;
     align-items: center;
     width: 100vw;
-    height: 100vh; 
+    height:40vw; 
     padding: 20px;
     margin: 0;
 
@@ -24,3 +24,14 @@ body {
     background-color: #f0f2f5;
     
   }
+
+  button[type="primary"] {
+    background-color: #1890ff;
+    border-color: #1890ff;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+button[type="primary"]:hover {
+    background-color: #40a9ff;
+    border-color: #40a9ff;
+}
