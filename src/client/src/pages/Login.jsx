@@ -1,18 +1,20 @@
 import React from "react";
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Row, Col } from 'antd';
-import '/src/styles/Login.css';
+import "../styles/Login.css";
+import { useNavigate } from 'react-router-dom';
 
-
-// Login.jsx or Login.js
 const Login = () => {
   const onFinish = (values) => {
-    console.log('Received values of form: ', values);
+    console.log('Valores recebidos do formulário: ', values);
   };
+
+
+  const navigate = useNavigate(); 
 
   return (
     <Form
-    className="form"
+      className="form"
       name="login"
       initialValues={{
         remember: true,
@@ -28,11 +30,11 @@ const Login = () => {
         rules={[
           {
             required: true,
-            message: 'Please input your Username!',
+            message: 'Por favor, insira seu nome de usuário!',
           },
         ]}
       >
-        <Input prefix={<UserOutlined />} placeholder="Username" />
+        <Input prefix={<UserOutlined />} placeholder="E-mail" />
       </Form.Item>
 
       <Form.Item
@@ -40,31 +42,20 @@ const Login = () => {
         rules={[
           {
             required: true,
-            message: 'Please input your Password!',
+            message: 'Por favor, insira sua senha!',
           },
         ]}
       >
-        <Input prefix={<LockOutlined />} type="password" placeholder="Password" />
+        <Input prefix={<LockOutlined />} type="password" placeholder="Senha" />
       </Form.Item>
 
-      <Form.Item>
-        <Row justify="space-between" align="middle">
-          <Col>
-            <Form.Item name="remember" valuePropName="checked" noStyle>
-              <Checkbox>Remember me</Checkbox>
-            </Form.Item>
-          </Col>
-          <Col>
-            <a href="">Forgot password</a>
-          </Col>
-        </Row>
-      </Form.Item>
+  
 
       <Form.Item>
         <Button block type="primary" htmlType="submit">
-          Log in
+          Entrar
         </Button>
-        or <a href="">Register now!</a>
+        ou <a href="/cadastro">Cadastre-se agora!</a>
       </Form.Item>
     </Form>
   );
