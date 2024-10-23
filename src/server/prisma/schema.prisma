@@ -5,24 +5,51 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  
 }
+
+model usuario {
+  idusuario Int          @id @default(autoincrement())
+  nome      String       @db.VarChar(255)
+  email     String       @unique @db.VarChar(255)
+  senha     String       @db.VarChar(255)
+  aluno     aluno[]      
+  professor professor[]  
+  empresa   empresaparceira[]
+}
+
 
 model aluno {
   idaluno     Int         @id @default(autoincrement())
   cpf         String      @unique @db.VarChar(14)
-  rg          String      @db.VarChar(12)
-  endereco_id Int?
+  rg          String      @db.VarChar(12)      
   curso       String?     @db.VarChar(255)
   saldomoedas Float?
-  endereco    endereco?   @relation(fields: [endereco_id], references: [idendereco], onDelete: NoAction, onUpdate: NoAction, map: "fk_endereco_aluno")
+ usuario_id  Int      @unique
+  usuario     usuario  @relation(fields: [usuario_id], references: [idusuario], onDelete: Cascade) 
+  endereco_id Int
+  endereco    endereco @relation(fields: [endereco_id], references: [idendereco])
   transacao   transacao[]
 }
 
+model professor {
+  idprofessor    Int           @id @default(autoincrement())
+  cpf            String        @unique @db.VarChar(14)
+  departamento   departamento?
+  instituicao_id Int?
+  saldomoedas    Float?
+  usuario_id     Int           @unique
+  usuario        usuario       @relation(fields: [usuario_id], references: [idusuario], onDelete: Cascade)
+  instituicao    instituicao?  @relation(fields: [instituicao_id], references: [idinstituicao], onDelete: NoAction, onUpdate: NoAction, map: "fk_instituicao")
+  transacao      transacao[]
+}
+
 model empresaparceira {
-  idempresa   Int        @id @default(autoincrement())
-  cnpj        String     @unique @db.VarChar(18)
-  nomeempresa String     @db.VarChar(255)
-  vantagem    vantagem[]
+  idempresa        Int              @id @default(autoincrement())
+  cnpj             String           @unique @db.VarChar(18)
+  usuario_id       Int              @unique
+  usuario          usuario          @relation(fields: [usuario_id], references: [idusuario], onDelete: Cascade)
+  vantagem         vantagem[]
 }
 
 model endereco {
@@ -36,29 +63,15 @@ model endereco {
   cep         String?       @db.VarChar(10)
   aluno       aluno[]
   instituicao instituicao[]
-  professor   professor[]
 }
+
 
 model instituicao {
   idinstituicao Int         @id @default(autoincrement())
   nome          String      @db.VarChar(255)
-  endereco_id   Int?
-  endereco      endereco?   @relation(fields: [endereco_id], references: [idendereco], onDelete: NoAction, onUpdate: NoAction, map: "fk_endereco_instituicao")
+  endereco_id   Int         // Campo obrigatório
+  endereco      endereco    @relation(fields: [endereco_id], references: [idendereco], onDelete: NoAction, onUpdate: NoAction, map: "fk_endereco_instituicao")
   professor     professor[]
-}
-
-model professor {
-  idprofessor    Int           @id @default(autoincrement())
-  cpf            String        @unique @db.VarChar(14)
-  departamento   departamento?
-  instituicao_id Int?
-  saldomoedas    Float?
-  usuario_id     Int?
-  endereco_id    Int?
-  endereco       endereco?     @relation(fields: [endereco_id], references: [idendereco], onDelete: NoAction, onUpdate: NoAction, map: "fk_endereco")
-  instituicao    instituicao?  @relation(fields: [instituicao_id], references: [idinstituicao], onDelete: NoAction, onUpdate: NoAction, map: "fk_instituicao")
-  usuario        usuario?      @relation(fields: [usuario_id], references: [idusuario], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario")
-  transacao      transacao[]
 }
 
 model transacao {
@@ -70,14 +83,6 @@ model transacao {
   professor_id Int?
   aluno        aluno?        @relation(fields: [aluno_id], references: [idaluno], onDelete: NoAction, onUpdate: NoAction, map: "fk_aluno")
   professor    professor?    @relation(fields: [professor_id], references: [idprofessor], onDelete: NoAction, onUpdate: NoAction, map: "fk_professor")
-}
-
-model usuario {
-  idusuario Int         @id @default(autoincrement())
-  nome      String      @db.VarChar(255)
-  email     String      @unique @db.VarChar(255)
-  senha     String      @db.VarChar(255)
-  professor professor[]
 }
 
 model vantagem {
@@ -92,11 +97,11 @@ model vantagem {
 enum departamento {
   Ensino
   Financeiro
-  Orienta__o_        @map("Orientação ")
-  Coordena__o        @map("Coordenação")
-  Registro_Acad_mico @map("Registro Acadêmico")
+  Orientacao        
+  Coordenacao       
+  Registro_Academico 
   Administrativo
-  Extens_o           @map("Extensão")
+  Extensao          
 }
 
 enum tipotransacao {

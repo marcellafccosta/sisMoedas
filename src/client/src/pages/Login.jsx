@@ -1,72 +1,70 @@
 import React from "react";
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Form, Input, Row, Col } from 'antd';
-import '/src/styles/Login.css';
+import { Button, Form, Input } from 'antd';
+import "../styles/Login.css";
+import { useNavigate } from 'react-router-dom';
 
-
-// Login.jsx or Login.js
 const Login = () => {
+  const navigate = useNavigate(); 
+
   const onFinish = (values) => {
-    console.log('Received values of form: ', values);
+    console.log('Valores recebidos do formulário: ', values);
+    // Aqui você pode adicionar lógica para autenticar o usuário.
   };
 
+  const handleCadastroClick = () => {
+    navigate('/cadastro');
+  }
+
   return (
-    <Form
-    className="form"
-      name="login"
-      initialValues={{
-        remember: true,
-      }}
-      style={{
-        maxWidth: 360,
-        margin: '0 auto',
-      }}
-      onFinish={onFinish}
-    >
-      <Form.Item
-        name="username"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your Username!',
-          },
-        ]}
+    <div className="login-container">
+      <Form
+        className="login-form"
+        name="login"
+        initialValues={{
+          remember: true,
+        }}
+        onFinish={onFinish}
       >
-        <Input prefix={<UserOutlined />} placeholder="Username" />
-      </Form.Item>
+        <div className="login-title">Login</div>
 
-      <Form.Item
-        name="password"
-        rules={[
-          {
-            required: true,
-            message: 'Please input your Password!',
-          },
-        ]}
-      >
-        <Input prefix={<LockOutlined />} type="password" placeholder="Password" />
-      </Form.Item>
+        <Form.Item
+          name="email"
+          rules={[
+            {
+              required: true,
+              message: 'Por favor, insira seu email!',
+            },
+          ]}
+        >
+          <Input prefix={<UserOutlined />} placeholder="E-mail" />
+        </Form.Item>
 
-      <Form.Item>
-        <Row justify="space-between" align="middle">
-          <Col>
-            <Form.Item name="remember" valuePropName="checked" noStyle>
-              <Checkbox>Remember me</Checkbox>
-            </Form.Item>
-          </Col>
-          <Col>
-            <a href="">Forgot password</a>
-          </Col>
-        </Row>
-      </Form.Item>
+        <Form.Item
+          name="senha"
+          rules={[
+            {
+              required: true,
+              message: 'Por favor, insira sua senha!',
+            },
+          ]}
+        >
+          <Input.Password prefix={<LockOutlined />} placeholder="Senha" />
+        </Form.Item>
 
-      <Form.Item>
-        <Button block type="primary" htmlType="submit">
-          Log in
-        </Button>
-        or <a href="">Register now!</a>
-      </Form.Item>
-    </Form>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
+            Entrar
+          </Button>
+          <div className="possuiConta">
+            Ainda não possui uma conta?{' '}
+            <Button type="link" onClick={handleCadastroClick}>
+              Cadastre-se!
+            </Button>
+          </div>
+        </Form.Item>
+      </Form>
+    </div>
   );
 };
 
