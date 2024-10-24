@@ -99,7 +99,7 @@ export class AlunoService {
                     curso: alunoData.curso,
                     saldomoedas: alunoData.saldomoedas,
                     usuario: {
-                        connect: { idusuario: alunoData.usuario_id },  // Conectar o usuário
+                        connect: { idusuario: alunoData.usuario_id },  
                     },
                     endereco: {
                         update: {
@@ -107,7 +107,7 @@ export class AlunoService {
                             bairro: alunoData.endereco.bairro,
                             cidade: alunoData.endereco.cidade,
                             estado: alunoData.endereco.estado,
-                            numero: alunoData.endereco.numero,
+                            numero: parseInt(alunoData.endereco.numero, 10),
                             complemento: alunoData.endereco.complemento,
                             cep: alunoData.endereco.cep,
                         },

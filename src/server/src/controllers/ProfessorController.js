@@ -47,20 +47,25 @@ export class ProfessorController {
         try {
             const { id } = req.params;
             const professorData = req.body;
-
+    
             if (isNaN(id)) {
                 return res.status(400).json({ error: "ID inválido" });
             }
-
+    
+            console.log('ID recebido:', id);
+            console.log('Dados recebidos para atualização:', professorData);
+    
             const professorAtualizado = await ProfessorService.updateProfessor(id, professorData);
-
+    
             if (professorAtualizado) {
                 res.status(200).json(professorAtualizado);
             } else {
                 return res.status(404).json({ message: `Professor com ID ${id} não encontrado.` });
             }
         } catch (error) {
+            console.error('Erro ao atualizar professor:', error);
             res.status(500).json({ error: error.message });
         }
     }
+    
 }

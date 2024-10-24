@@ -39,7 +39,6 @@ const Cadastro = () => {
 
     const handleSubmit = async (values) => {
         try {
-            // Estruturação dos dados básicos do usuário
             const payload = {
                 usuario: {
                     nome: values.nome,
@@ -49,7 +48,6 @@ const Cadastro = () => {
                 tipo: values.tipo,
             };
 
-            // Adicionando campos específicos com base no tipo de usuário
             if (values.tipo === "aluno") {
                 payload.cpf = values.cpf;
                 payload.rg = values.rg;
