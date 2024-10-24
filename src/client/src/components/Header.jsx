@@ -37,6 +37,11 @@ const AppHeader = () => {
             label: 'Extrato',
             onClick: () => handleMenuClick('/extrato'),
         },
+        {
+            key: '5',
+            label: 'Vantagens',
+            onClick: () => handleMenuClick('/vantagens'),
+        },
     ];
 
     const handlePerfilClick = () => {

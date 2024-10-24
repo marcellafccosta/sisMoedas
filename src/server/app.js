@@ -1,8 +1,14 @@
 import express from 'express';
 import cors from 'cors';
 import routes from './src/routes/routes.js';
-
+import path from 'path';
+import { fileURLToPath } from 'url';
 const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Middleware para habilitar CORS
 app.use(cors({
