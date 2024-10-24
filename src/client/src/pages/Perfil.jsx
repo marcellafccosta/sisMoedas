@@ -375,21 +375,21 @@ const Perfil = () => {
         <>
             <AppHeader />
             <div className="profile-container">
-                <Card
-                    title="Perfil do Usuário"
-                    bordered
-                    extra={
-                        isEditing ? (
-                            <>
-                                <Button type="primary" onClick={handleSave}>Salvar</Button>
-                                <Button style={{ marginLeft: '10px' }} onClick={() => setIsEditing(false)}>Cancelar</Button>
-                            </>
-                        ) : (
-                            <Button type="primary" onClick={handleEdit}>Editar</Button>
-                        )
-                    }
-
-                >
+            <Card
+    title="Perfil do Usuário"
+    bordered
+    style={{ width: '100%', maxWidth: '800px', height: 'fit-content' }} // Ajuste aqui para garantir que o Card também se ajuste ao conteúdo
+    extra={
+        isEditing ? (
+            <>
+                <Button type="primary" onClick={handleSave}>Salvar</Button>
+                <Button style={{ marginLeft: '10px' }} onClick={() => setIsEditing(false)}>Cancelar</Button>
+            </>
+        ) : (
+            <Button type="primary" onClick={handleEdit}>Editar</Button>
+        )
+    }
+>
                     {profileData ? (
                         <>
                             <Descriptions bordered column={2}>

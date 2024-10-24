@@ -132,7 +132,7 @@ const CadastroVantagem = () => {
           </Form.Item>
 
           <Form.Item style={{ textAlign: "center" }}>
-            <Button type="primary" htmlType="submit" block style={{ backgroundColor: '#4CAF50', borderColor: '#4CAF50', width: "15vw", textAlign: "center" }}>
+            <Button type="primary" htmlType="submit" block style={{ backgroundColor: '#0f4c75', borderColor: '#0f4c75', width: "15vw", textAlign: "center" }}>
               Cadastrar Vantagem
             </Button>
           </Form.Item>

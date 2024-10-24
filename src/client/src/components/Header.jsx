@@ -9,7 +9,6 @@ const { Header } = Layout;
 
 const AppHeader = () => {
     const navigate = useNavigate();
-    const idUsuario = 16; //fixo
 
     const handleMenuClick = (path) => {
         navigate(path);

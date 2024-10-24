@@ -13,14 +13,14 @@
   }
   
   .ant-btn-primary {
-    background-color: #4CAF50; 
-    border-color: #4CAF50; 
+    background-color: #0f4c75; 
+    border-color: #0f4c75; 
     width: 10vw;
   }
   
   .ant-btn-primary:hover {
-    background-color: #45a049;
-    border-color: #45a049; 
+    background-color: #0f4c75;
+    border-color: #0f4c75; 
   }
   
   .ant-upload {

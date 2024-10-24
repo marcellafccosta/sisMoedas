@@ -57,7 +57,8 @@ const Extrato = () => {
     };
 
     return (
-        <><AppHeader /><div className="extrato-container">
+        <><AppHeader />
+        <div className="extrato-container">
             <Row gutter={[16, 16]}>
                 <Col span={24}>
                     <Card className="saldo-card" title="Saldo Atual" bordered={false}>

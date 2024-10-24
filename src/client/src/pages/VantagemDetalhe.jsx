@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, Typography, Button, Spin, Modal, notification } from "antd"; // Importando componentes do Ant Design
 import '../styles/VantagemDetalhe.css'; // Importando o CSS
+import AppHeader from "../components/Header";
+
 
 const VantagemDetalhe = () => {
   const { id } = useParams(); // Pegando o ID da URL
@@ -64,9 +66,9 @@ const VantagemDetalhe = () => {
   }
 
   return (
-    <div className="vantagem-detalhe-container">
-      <button 
-        className="vantagem-detalhe-back-button" 
+    <><AppHeader /><div className="vantagem-detalhe-container">
+      <button
+        className="vantagem-detalhe-back-button"
         onClick={() => navigate('/Vantagens')}
       >
         Voltar
@@ -74,19 +76,16 @@ const VantagemDetalhe = () => {
       <Card
         hoverable
         className="vantagem-detalhe-card"
-        cover={
-          <img
-            alt={vantagem.descricao}
-            src={`http://localhost:3000/${vantagem.foto}`}
-            className="vantagem-detalhe-image"
-          />
-        }
+        cover={<img
+          alt={vantagem.descricao}
+          src={`http://localhost:3000/${vantagem.foto}`}
+          className="vantagem-detalhe-image" />}
       >
         <Typography.Title level={3} className="vantagem-detalhe-title">{vantagem.customoedas}</Typography.Title>
         <Typography.Paragraph className="vantagem-detalhe-details">
           <strong>Custo:</strong> {vantagem.descricao} moedas
         </Typography.Paragraph>
-        
+
         <div className="vantagem-detalhe-buttons">
           <Button type="primary" style={{ marginRight: "8px" }}>
             Editar
@@ -96,7 +95,7 @@ const VantagemDetalhe = () => {
           </Button>
         </div>
       </Card>
-    </div>
+    </div></>
   );
 };
 
