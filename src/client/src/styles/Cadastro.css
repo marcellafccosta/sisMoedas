@@ -1,17 +1,14 @@
-/* Cadastro.css */
-
 body {
     background: linear-gradient(135deg, #3282b8, #0f4c75);
-
 }
 
 .cadastro-container {
     display: flex;
     justify-content: center;
-    align-items: center;
     padding: 20px;
-    margin: 0;
-    
+    min-height: 100vh;
+    width: 100vw;
+    height: 100vh;
 }
 
 .cadastro-form {
@@ -20,7 +17,8 @@ body {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     width: 100%;
-    max-width: 400px;
+    max-width: 600px;
+    height: fit-content;
 }
 
 .cadastro-title {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, Input, Select, message } from 'antd';
+import { Button, Form, Input, Select, message, Space } from 'antd';
 import "../styles/Cadastro.css";
 import { useNavigate } from 'react-router-dom';
 
@@ -39,7 +39,6 @@ const Cadastro = () => {
 
     const handleSubmit = async (values) => {
         try {
-            // Estruturação dos dados básicos do usuário
             const payload = {
                 usuario: {
                     nome: values.nome,
@@ -49,7 +48,6 @@ const Cadastro = () => {
                 tipo: values.tipo,
             };
 
-            // Adicionando campos específicos com base no tipo de usuário
             if (values.tipo === "aluno") {
                 payload.cpf = values.cpf;
                 payload.rg = values.rg;
@@ -71,8 +69,6 @@ const Cadastro = () => {
                 payload.cnpj = values.cnpj;
             }
 
-            console.log("Payload enviado:", payload); // Log para verificar o payload enviado
-
             if (!payload.usuario.nome || !payload.usuario.email || !payload.usuario.senha) {
                 message.error("Dados insuficientes. Verifique se todos os campos de usuário estão preenchidos.");
                 return;
@@ -82,7 +78,7 @@ const Cadastro = () => {
                 message.error("O CNPJ é obrigatório para empresa parceira.");
                 return;
             }
-            // Determinar a rota com base no tipo de usuário
+            
             let apiUrl;
             switch (values.tipo) {
                 case "aluno":
@@ -107,7 +103,6 @@ const Cadastro = () => {
                 body: JSON.stringify(payload),
             });
 
-
             if (!response.ok) {
                 const errorData = await response.json();
                 console.error("Erro ao cadastrar:", errorData);
@@ -121,7 +116,6 @@ const Cadastro = () => {
             message.error(`Erro ao cadastrar ${values.tipo}: ${error.message}`);
         }
     };
-
 
     const onFinish = (values) => {
         handleSubmit(values);
@@ -149,74 +143,62 @@ const Cadastro = () => {
             >
                 <div className="cadastro-title">Cadastro</div>
 
-                <Form.Item
-                    name="nome"
-                    label="Nome"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Por favor, insira seu nome!',
-                        },
-                    ]}
-                >
-                    <Input placeholder="Nome" />
-                </Form.Item>
+                <Space.Compact style={{ width: '100%' }}>
+                    <Form.Item
+                        name="nome"
+                        style={{ width: '50%' }}
+                        rules={[{ required: true, message: 'Por favor, insira seu nome!' }]}
+                    >
+                        <Input placeholder="Nome" />
+                    </Form.Item>
+
+                    <Form.Item
+                        name="email"
+                        style={{ width: '50%' }}
+                        rules={[
+                            { type: 'email', message: 'E-mail inválido!' },
+                            { required: true, message: 'Por favor, insira seu e-mail!' },
+                        ]}
+                    >
+                        <Input placeholder="E-mail" />
+                    </Form.Item>
+                </Space.Compact>
+
+                <Space.Compact style={{ width: '100%' }}>
+                    <Form.Item
+                        name="senha"
+                        style={{ width: '50%' }}
+                        rules={[{ required: true, message: 'Por favor, insira sua senha!' }]}
+                        hasFeedback
+                    >
+                        <Input.Password placeholder="Senha" />
+                    </Form.Item>
+
+                    <Form.Item
+                        name="confirm"
+                        style={{ width: '50%' }}
+                        dependencies={['senha']}
+                        hasFeedback
+                        rules={[
+                            { required: true, message: 'Por favor, confirme sua senha!' },
+                            ({ getFieldValue }) => ({
+                                validator(_, value) {
+                                    if (!value || getFieldValue('senha') === value) {
+                                        return Promise.resolve();
+                                    }
+                                    return Promise.reject(new Error('As senhas não coincidem!'));
+                                },
+                            }),
+                        ]}
+                    >
+                        <Input.Password placeholder="Confirme sua senha" />
+                    </Form.Item>
+                </Space.Compact>
 
                 <Form.Item
-                    name="email"
-                    label="E-mail"
-                    rules={[
-                        {
-                            type: 'email',
-                            message: 'E-mail inválido!',
-                        },
-                        {
-                            required: true,
-                            message: 'Por favor, insira seu e-mail!',
-                        },
-                    ]}
+                    name="tipo"
+                    style={{ width: '100%' }}
                 >
-                    <Input placeholder="E-mail" />
-                </Form.Item>
-
-                <Form.Item
-                    name="senha"
-                    label="Senha"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Por favor, insira sua senha!',
-                        },
-                    ]}
-                    hasFeedback
-                >
-                    <Input.Password placeholder="Senha" />
-                </Form.Item>
-
-                <Form.Item
-                    name="confirm"
-                    label="Confirme sua senha"
-                    dependencies={['senha']}
-                    hasFeedback
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Por favor, confirme sua senha!',
-                        },
-                        ({ getFieldValue }) => ({
-                            validator(_, value) {
-                                if (!value || getFieldValue('senha') === value) {
-                                    return Promise.resolve();
-                                }
-                                return Promise.reject(new Error('As senhas não coincidem!'));
-                            },
-                        }),
-                    ]}
-                >
-                    <Input.Password placeholder="Confirme sua senha" />
-                </Form.Item>
-
-                <Form.Item label="Tipo de Usuário" name="tipo">
                     <Select placeholder="Selecione o tipo de usuário" onChange={handleUserTypeChange}>
                         <Option value="aluno">Aluno</Option>
                         <Option value="professor">Professor</Option>
@@ -246,13 +228,15 @@ const Cadastro = () => {
             case "aluno":
                 return (
                     <>
-                        <Form.Item label="CPF" name="cpf" rules={[{ required: true, message: 'CPF é obrigatório' }]}>
-                            <Input placeholder="Digite o CPF" />
-                        </Form.Item>
-                        <Form.Item label="RG" name="rg" rules={[{ required: true, message: 'RG é obrigatório' }]}>
-                            <Input placeholder="Digite o RG" />
-                        </Form.Item>
-                        <Form.Item label="Curso" name="curso" rules={[{ required: true, message: 'Curso é obrigatório' }]}>
+                        <Space.Compact style={{ width: '100%' }}>
+                            <Form.Item name="cpf" style={{ width: '50%' }} rules={[{ required: true, message: 'CPF é obrigatório' }]}>
+                                <Input placeholder="Digite o CPF" />
+                            </Form.Item>
+                            <Form.Item name="rg" style={{ width: '50%' }} rules={[{ required: true, message: 'RG é obrigatório' }]}>
+                                <Input placeholder="Digite o RG" />
+                            </Form.Item>
+                        </Space.Compact>
+                        <Form.Item name="curso" style={{ width: '100%' }} rules={[{ required: true, message: 'Curso é obrigatório' }]}>
                             <Select placeholder="Selecione o curso">
                                 {cursos.map((curso) => (
                                     <Option key={curso} value={curso}>
@@ -267,11 +251,10 @@ const Cadastro = () => {
             case "professor":
                 return (
                     <>
-                        <Form.Item label="CPF" name="cpf" rules={[{ required: true, message: 'CPF é obrigatório' }]}>
+                        <Form.Item name="cpf" rules={[{ required: true, message: 'CPF é obrigatório' }]}>
                             <Input placeholder="Digite o CPF" />
                         </Form.Item>
-
-                        <Form.Item label="Departamento" name="departamento" rules={[{ required: true, message: 'Departamento é obrigatório' }]}>
+                        <Form.Item name="departamento" rules={[{ required: true, message: 'Departamento é obrigatório' }]}>
                             <Select placeholder="Selecione o departamento">
                                 {departamentos.map((departamento) => (
                                     <Option key={departamento.value} value={departamento.value}>
@@ -280,8 +263,7 @@ const Cadastro = () => {
                                 ))}
                             </Select>
                         </Form.Item>
-
-                        <Form.Item label="Instituição" name="instituicao_id" rules={[{ required: true, message: 'Instituição é obrigatória' }]}>
+                        <Form.Item name="instituicao_id" rules={[{ required: true, message: 'Instituição é obrigatória' }]}>
                             <Select placeholder="Selecione a instituição">
                                 {instituicoes.map((inst) => (
                                     <Option key={inst.idinstituicao} value={inst.idinstituicao}>
@@ -294,7 +276,7 @@ const Cadastro = () => {
                 );
             case "empresaparceira":
                 return (
-                    <Form.Item label="CNPJ" name="cnpj" rules={[{ required: true, message: 'CNPJ é obrigatório' }]}>
+                    <Form.Item name="cnpj" rules={[{ required: true, message: 'CNPJ é obrigatório' }]}>
                         <Input placeholder="Digite o CNPJ" />
                     </Form.Item>
                 );
@@ -306,45 +288,37 @@ const Cadastro = () => {
     function renderEnderecoForm() {
         return (
             <>
-                <Form.Item label="Endereço">
-
+                <Form.Item>
+                    <Space.Compact style={{ width: '100%' }}>
                         <Form.Item name="cep" rules={[{ required: true, message: 'CEP é obrigatório' }]} style={{ width: '100%' }}>
                             <Input placeholder="CEP" />
                         </Form.Item>
-                        
-
+                    </Space.Compact>
                 </Form.Item>
-                <Form.Item>
-                    <Input.Group compact>
+                <Space.Compact style={{ width: '100%' }}>
                     <Form.Item name="logradouro" rules={[{ required: true, message: 'Logradouro é obrigatório' }]} style={{ width: '50%' }}>
-                            <Input placeholder="Logradouro" />
-                        </Form.Item>
-                        <Form.Item name="bairro" style={{ width: '50%' }}>
-                            <Input placeholder="Bairro" />
-                        </Form.Item>
-                    </Input.Group>
-                </Form.Item>
-
-                <Form.Item>
-                    <Input.Group compact>
-                        <Form.Item name="numero" rules={[{ required: true, message: 'Número é obrigatório' }]} style={{ width: '50%' }}>
-                            <Input placeholder="Número" />
-                        </Form.Item>
-                        <Form.Item name="complemento" style={{ width: '50%' }}>
-                            <Input placeholder="Complemento" />
-                        </Form.Item>
-                    </Input.Group>
-                </Form.Item>
-                <Form.Item>
-                    <Input.Group compact>
-                        <Form.Item name="cidade" rules={[{ required: true, message: 'Cidade é obrigatória' }]} style={{ width: '50%' }}>
-                            <Input placeholder="Cidade" />
-                        </Form.Item>
-                        <Form.Item name="estado" rules={[{ required: true, message: 'Estado é obrigatório' }]} style={{ width: '50%' }}>
-                            <Input placeholder="Estado" />
-                        </Form.Item>
-                    </Input.Group>
-                </Form.Item>
+                        <Input placeholder="Logradouro" />
+                    </Form.Item>
+                    <Form.Item name="bairro" style={{ width: '50%' }}>
+                        <Input placeholder="Bairro" />
+                    </Form.Item>
+                </Space.Compact>
+                <Space.Compact style={{ width: '100%' }}>
+                    <Form.Item name="numero" rules={[{ required: true, message: 'Número é obrigatório' }]} style={{ width: '50%' }}>
+                        <Input placeholder="Número" />
+                    </Form.Item>
+                    <Form.Item name="complemento" style={{ width: '50%' }}>
+                        <Input placeholder="Complemento" />
+                    </Form.Item>
+                </Space.Compact>
+                <Space.Compact style={{ width: '100%' }}>
+                    <Form.Item name="cidade" rules={[{ required: true, message: 'Cidade é obrigatória' }]} style={{ width: '50%' }}>
+                        <Input placeholder="Cidade" />
+                    </Form.Item>
+                    <Form.Item name="estado" rules={[{ required: true, message: 'Estado é obrigatório' }]} style={{ width: '50%' }}>
+                        <Input placeholder="Estado" />
+                    </Form.Item>
+                </Space.Compact>
             </>
         );
     }

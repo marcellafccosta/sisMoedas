@@ -1,11 +1,3 @@
-/* components/Extrato.css */
-
-html, body {
-    height: 100%; /* Garante que o body ocupe toda a altura da tela */
-    margin: 0; /* Remove margens padrão */
-    font-family: Arial, sans-serif; /* Fonte padrão */
-}
-
 .extrato-container {
     display: flex;
     flex-direction: column;

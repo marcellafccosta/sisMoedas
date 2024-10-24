@@ -1,10 +1,10 @@
-/* VantagemDetalhe.css */
+
 *{
     margin: 0;
 }
 .vantagem-detalhe-container {
     padding: 2rem;
-    background-color: #f5f5f5; /* Cor de fundo suave */
+    background-color: #f5f5f5; 
     width: 100vw;
     height: 100vh;
 }
@@ -12,44 +12,44 @@
 .vantagem-detalhe-card {
     max-width: 600px;
     margin: auto;
-    border-radius: 12px; /* Bordas arredondadas */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra mais suave */
-    transition: transform 0.3s; /* Efeito de transição */
+    border-radius: 12px; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+    transition: transform 0.3s;
 }
 
 .vantagem-detalhe-card:hover {
-    transform: translateY(-5px); /* Elevação ao passar o mouse */
+    transform: translateY(-5px);
 }
 
 .vantagem-detalhe-image {
     height: 400px;
     object-fit: cover;
-    border-radius: 12px 12px 0 0; /* Bordas arredondadas apenas na parte superior */
+    border-radius: 12px 12px 0 0; 
 }
 
 .vantagem-detalhe-title {
     text-align: center;
-    color: #333; /* Cor do texto */
+    color: #333; 
 }
 
 .vantagem-detalhe-details {
-    margin: 1rem 0; /* Espaçamento nas informações */
+    margin: 1rem 0; 
 }
 
 .vantagem-detalhe-buttons {
     display: flex;
-    justify-content: space-between; /* Espaçamento entre os botões */
+    justify-content: space-between; 
 }
 
 .vantagem-detalhe-back-button {
-    margin-bottom: 16px; /* Espaçamento do botão Voltar */
+    margin-bottom: 16px;
     border: none;
-    background-color: transparent; /* Fundo transparente */
-    color: #04448B; /* Cor do texto */
+    background-color: transparent; 
+    color: #04448B; 
     cursor: pointer;
-    font-size: 16px; /* Tamanho do texto */
+    font-size: 16px;
 }
 
 .vantagem-detalhe-back-button:hover {
-    text-decoration: underline; /* Efeito ao passar o mouse */
+    text-decoration: underline; 
 }

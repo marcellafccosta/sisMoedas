@@ -4,28 +4,27 @@
 }
 
 .cadastroVantagem-container {
-    background-color: #ffffff; /* Cor de fundo do contêiner */
-    padding: 40px; /* Espaçamento interno */
-    border-radius: 8px; /* Bordas arredondadas */
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    background-color: #ffffff; 
+    padding: 40px; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1); 
     width: 100vw;
     height: 100vh;
   }
   
   .ant-btn-primary {
-    background-color: #4CAF50; /* Cor do botão */
-    border-color: #4CAF50; /* Cor da borda do botão */
+    background-color: #0f4c75; 
+    border-color: #0f4c75; 
     width: 10vw;
   }
   
   .ant-btn-primary:hover {
-    background-color: #45a049; /* Cor do botão ao passar o mouse */
-    border-color: #45a049; /* Cor da borda do botão ao passar o mouse */
-   
+    background-color: #0f4c75;
+    border-color: #0f4c75; 
   }
   
   .ant-upload {
-    margin-top: 10px; /* Margem superior para o componente de upload */
+    margin-top: 10px; 
   }
   
   

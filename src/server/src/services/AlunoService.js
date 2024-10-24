@@ -116,23 +116,24 @@ export class AlunoService {
             const alunoAtualizado = await prismaClient.aluno.update({
                 where: { idaluno: parseInt(alunoId) },
                 data: {
-                    ...dadosAtualizados,
-                    // Verificando se dados de usuário precisam ser atualizados
-                    usuario: alunoData.usuario_id ? {
-                        connect: { idusuario: alunoData.usuario_id }
-                    } : undefined,
-                    // Verificando se o endereço precisa ser atualizado
-                    endereco: alunoData.endereco ? {
+                    cpf: alunoData.cpf,
+                    rg: alunoData.rg,
+                    curso: alunoData.curso,
+                    saldomoedas: alunoData.saldomoedas,
+                    usuario: {
+                        connect: { idusuario: alunoData.usuario_id },  
+                    },
+                    endereco: {
                         update: {
-                            logradouro: alunoData.endereco.logradouro || alunoExistente.endereco.logradouro,
-                            bairro: alunoData.endereco.bairro || alunoExistente.endereco.bairro,
-                            cidade: alunoData.endereco.cidade || alunoExistente.endereco.cidade,
-                            estado: alunoData.endereco.estado || alunoExistente.endereco.estado,
-                            numero: alunoData.endereco.numero || alunoExistente.endereco.numero,
-                            complemento: alunoData.endereco.complemento || alunoExistente.endereco.complemento,
-                            cep: alunoData.endereco.cep || alunoExistente.endereco.cep,
-                        }
-                    } : undefined
+                            logradouro: alunoData.endereco.logradouro,
+                            bairro: alunoData.endereco.bairro,
+                            cidade: alunoData.endereco.cidade,
+                            estado: alunoData.endereco.estado,
+                            numero: parseInt(alunoData.endereco.numero, 10),
+                            complemento: alunoData.endereco.complemento,
+                            cep: alunoData.endereco.cep,
+                        },
+                    },
                 },
                 include: {
                     endereco: true,

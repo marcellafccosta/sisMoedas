@@ -17,25 +17,46 @@ export class EmpresaParceiraService {
         }
     }
 
-    // Busca uma empresa parceira por ID
     async getById(id) {
-        try {
-            const empresa = await prismaClient.empresaparceira.findUnique({
-                where: { idempresa: parseInt(id) },
-                include: {
-                    usuario: true,
-                    vantagem: true
-                }
-            });
-            if (!empresa) {
-                throw new Error("Empresa parceira não encontrada");
+    try {
+        const empresa = await prismaClient.empresaparceira.findUnique({
+            where: { idempresa: parseInt(id) }, 
+            include: {
+                usuario: true,
+                vantagem: true // Inclui as vantagens relacionadas
             }
-            return empresa;
-        } catch (error) {
-            console.error("Erro ao buscar empresa parceira:", error.message);
-            throw new Error("Erro ao buscar empresa parceira: " + error.message);
+        });
+        if (!empresa) {
+            console.error("Empresa parceira com ID " + id + " não encontrada");
+            throw new Error("Empresa parceira não encontrada");
         }
+        return empresa;
+    } catch (error) {
+        console.error("Erro ao buscar empresa parceira:", error.message);
+        throw new Error("Erro ao buscar empresa parceira: " + error.message);
     }
+}
+async getById(id) {
+    try {
+        const empresa = await prismaClient.empresaparceira.findUnique({
+            where: { idempresa: parseInt(id) }, 
+            include: {
+                usuario: true,
+                vantagem: true // Inclui as vantagens relacionadas
+            }
+        });
+        if (!empresa) {
+            console.error("Empresa parceira com ID " + id + " não encontrada");
+            throw new Error("Empresa parceira não encontrada");
+        }
+        return empresa;
+    } catch (error) {
+        console.error("Erro ao buscar empresa parceira:", error.message);
+        throw new Error("Erro ao buscar empresa parceira: " + error.message);
+    }
+}
+
+    
 
     async createEmpresaparceira(empresaData) {
         try {

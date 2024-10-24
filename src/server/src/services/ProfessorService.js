@@ -119,6 +119,9 @@ export class ProfessorService {
             throw new Error("Erro ao atualizar professor: " + error.message);
         }
     }
+    
+    
+    
 
     async deleteProfessor(id) {
         try {
