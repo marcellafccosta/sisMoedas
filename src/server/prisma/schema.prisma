@@ -89,7 +89,7 @@ model vantagem {
   idvantagem         Int              @id @default(autoincrement())
   descricao          String           @db.VarChar(255)
   customoedas        Float
-  foto               String?          @db.VarChar(255)
+  foto               String?            @db.VarChar(255)
   empresaparceira_id Int?
   empresaparceira    empresaparceira? @relation(fields: [empresaparceira_id], references: [idempresa], onDelete: NoAction, onUpdate: NoAction, map: "fk_empresaparceira")
 }

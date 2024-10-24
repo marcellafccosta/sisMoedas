@@ -32,6 +32,32 @@ export class VantagemController {
     async createVantagem(req, res) {
         try {
             const vantagemData = req.body;
+    
+            // Verifica se o customoedas está presente e tenta convertê-lo para float
+            if (vantagemData.customoedas) {
+                vantagemData.customoedas = parseFloat(vantagemData.customoedas);
+            }
+    
+            // Verifica se a conversão foi bem-sucedida
+            if (isNaN(vantagemData.customoedas)) {
+                return res.status(400).json({ message: "O custo em moedas deve ser um número válido." });
+            }
+    
+            // Verifica se o idempresa está presente e tenta convertê-lo para inteiro
+            if (vantagemData.empresaparceira_id) {
+                vantagemData.empresaparceira_id = parseInt(vantagemData.empresaparceira_id, 10);
+            }
+    
+            // Verifica se a conversão foi bem-sucedida
+            if (isNaN(vantagemData.empresaparceira_id)) {
+                return res.status(400).json({ message: "O ID da empresa parceira deve ser um número válido." });
+            }
+    
+            // Verifica se um arquivo de imagem foi enviado e adiciona o caminho ao objeto vantagemData
+            if (req.file) {
+                vantagemData.foto = req.file.path; // Caminho do arquivo salvo pelo multer
+            }
+    
             const novaVantagem = await VantagemService.createVantagem(vantagemData);
             res.status(201).json(novaVantagem);
         } catch (error) {
@@ -39,6 +65,9 @@ export class VantagemController {
             res.status(500).json({ message: "Não foi possível cadastrar a vantagem. Tente novamente mais tarde." });
         }
     }
+    
+    
+    
 
     // Função para atualizar uma vantagem
     async updateVantagem(req, res) {

@@ -1,5 +1,4 @@
 /* Header.css */
-
 .app-header {
     display: flex;
     justify-content: space-between;
@@ -23,12 +22,14 @@
 .logo {
     display: flex;
     align-items: center;
+    
 }
 
 .logo-image {
-    height: 5rem; 
+    height: 4rem; 
     width: auto;
     cursor: pointer;
+    
 }
 
 .menu-desktop {
@@ -41,6 +42,7 @@
 .user-actions {
     display: flex;
     align-items: center;
+    
 }
 
 .user-actions .ant-btn {
@@ -48,6 +50,8 @@
     border: none;
     color: #ffffff;
     transition: background-color 0.3s, border-color 0.3s;
+   
+    
 }
 
 .user-actions .ant-btn:hover {

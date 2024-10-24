@@ -6,6 +6,10 @@ import Perfil from './pages/Perfil.jsx';
 import AppHeader from './components/Header.jsx';
 import Home from './pages/Home.jsx';
 import Extrato from './pages/Extrato.jsx';
+import CadastroVantagem from './pages/CadastroVantagem.jsx';
+import Vantagens from './pages/Vantagens.jsx';
+import VantagemDetalhe from './pages/VantagemDetalhe.jsx';
+
 
 function App() {
   return (
@@ -16,6 +20,9 @@ function App() {
         <Route path="/cadastro" element={<Cadastro />} /> 
         <Route path="/perfil/:idUsuario" element={<Perfil />} /> 
         <Route path="/extrato" element={<Extrato />} /> 
+        <Route path="/cadastroVantagem" element={<CadastroVantagem />} /> 
+        <Route path="/Vantagens" element={<Vantagens />} /> 
+        <Route path="/VantagemDetalhe/:id" element={<VantagemDetalhe />} /> 
       </Routes>
     </Router>
   );
