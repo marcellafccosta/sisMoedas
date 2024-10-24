@@ -1,85 +1,91 @@
-import React, { useState, useEffect } from "react";
-import { Table, Card, Row, Col, Button } from 'antd';
-import "../styles/Extrato.css";
-import { useNavigate } from 'react-router-dom';
-import AppHeader from "../components/Header";
+import React, { useEffect, useState } from 'react';
+
 const Extrato = () => {
-    const navigate = useNavigate();
     const [transacoes, setTransacoes] = useState([]);
-    const [saldo, setSaldo] = useState(0);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        const transacoesMock = [
-            { key: '1', tipo: 'Crédito', quantidade: 50, data: '2024-10-20', descricao: 'Recebimento de Moedas' },
-            { key: '2', tipo: 'Débito', quantidade: 20, data: '2024-10-22', descricao: 'Troca por Recompensa' },
-            { key: '3', tipo: 'Débito', quantidade: 10, data: '2024-10-23', descricao: 'Envio de Moedas' },
-        ];
-        setTransacoes(transacoesMock);
+        const fetchTransacoes = async () => {
+            try {
+                const data = await TransacaoService.getAll();
+                setTransacoes(data);
+            } catch (err) {
+                setError('Erro ao carregar transações. Tente novamente.');
+            } finally {
+                setLoading(false);
+            }
+        };
 
-        const saldoAtual = transacoesMock.reduce((acc, transacao) => {
-            return transacao.tipo === 'Crédito' ? acc + transacao.quantidade : acc - transacao.quantidade;
-        }, 0);
-
-        setSaldo(saldoAtual);
+        fetchTransacoes();
     }, []);
 
-    const columns = [
-        {
-            title: 'Descrição',
-            dataIndex: 'descricao',
-            key: 'descricao',
-        },
-        {
-            title: 'Tipo',
-            dataIndex: 'tipo',
-            key: 'tipo',
-        },
-        {
-            title: 'Quantidade',
-            dataIndex: 'quantidade',
-            key: 'quantidade',
-            render: (text) => `${text} moedas`,
-        },
-        {
-            title: 'Data',
-            dataIndex: 'data',
-            key: 'data',
-        },
-    ];
+    if (loading) {
+        return <p>Carregando...</p>;
+    }
 
-
-    const handleEnviarMoedas = () => {
-        navigate('/');
-    };
-
-    const handleVerVantagens = () => {
-        navigate('/');
-    };
+    if (error) {
+        return <p>{error}</p>;
+    }
 
     return (
-        <><AppHeader /><div className="extrato-container">
-            <Row gutter={[16, 16]}>
-                <Col span={24}>
-                    <Card className="saldo-card" title="Saldo Atual" bordered={false}>
-                        <h2>{saldo} Moedas</h2>
-                    </Card>
-                </Col>
-                <Col span={24}>
-                    <Card title="Extrato de Transações" bordered={false}>
-                        <Table columns={columns} dataSource={transacoes} pagination={false} />
-                    </Card>
-                </Col>
-                <Col span={24} className="button-group">
-                    <Button type="primary" onClick={handleEnviarMoedas} style={{ marginRight: '10px' }}>
-                        Enviar Moedas
-                    </Button>
-                    <Button type="default" onClick={handleVerVantagens}>
-                        Ver Vantagens
-                    </Button>
-                </Col>
-            </Row>
-        </div></>
+        <div style={styles.container}>
+            <h1 style={styles.header}>Extrato de Transações</h1>
+            <table style={styles.table}>
+                <thead>
+                    <tr>
+                        <th style={styles.headerCell}>ID</th>
+                        <th style={styles.headerCell}>Descrição</th>
+                        <th style={styles.headerCell}>Valor</th>
+                        <th style={styles.headerCell}>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {transacoes.map(transacao => (
+                        <tr key={transacao.id}>
+                            <td style={styles.cell}>{transacao.id}</td>
+                            <td style={styles.cell}>{transacao.descricao}</td>
+                            <td style={styles.cell}>{transacao.valor}</td>
+                            <td style={styles.cell}>{new Date(transacao.data).toLocaleDateString()}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
     );
 };
 
+// Estilos em formato de objeto
+const styles = {
+    container: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh', // Ocupe 100% da altura da janela
+        backgroundColor: '#f4f4f4', // Cor de fundo suave
+        padding: '20px', // Espaçamento ao redor
+    },
+    header: {
+        marginBottom: '20px', // Espaço abaixo do título
+    },
+    table: {
+        width: '100%', // Ocupe toda a largura disponível
+        borderCollapse: 'collapse', // Remove espaços entre bordas de células
+    },
+    headerCell: {
+        border: '1px solid #ccc', // Borda das células do cabeçalho
+        padding: '12px', // Espaçamento interno das células
+        textAlign: 'left', // Alinhamento à esquerda do texto
+        backgroundColor: '#007BFF', // Cor de fundo do cabeçalho
+        color: 'white', // Cor do texto do cabeçalho
+    },
+    cell: {
+        border: '1px solid #ccc', // Borda das células
+        padding: '12px', // Espaçamento interno das células
+        textAlign: 'left', // Alinhamento à esquerda do texto
+    },
+};
+
+// Exporta o componente
 export default Extrato;

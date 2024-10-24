@@ -1,12 +1,13 @@
 /* Home.css */
+body {
+    margin: 0; /* Remove default margin from the body */
+}
 
 .homepage-container {
-    width: 100%;
-    padding: 0 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    width: 100%; /* Faz a largura do container ser igual à do body */
+margin: 0 auto; /* Centraliza o container se uma largura máxima for definida */
+    padding: 20px; /* Opcional: Adiciona um espaçamento interno */
+    box-sizing: border-box; /* Inclui padding e borda na largura total */
 }
 
 .hero-section {
@@ -15,7 +16,7 @@
     padding: 60px 20px;
     text-align: center;
     margin-bottom: 40px;
-    width: 100%;
+    width: 100%; /* Keep full width */
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -36,8 +37,8 @@
 
 .info-section {
     width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
+    max-width: 1200px; /* Maintain max width for the info section */
+    margin: 0 auto; /* Center the section */
     padding: 20px 0;
 }
 

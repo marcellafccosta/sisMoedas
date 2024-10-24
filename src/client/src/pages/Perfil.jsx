@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Card, Descriptions, Button } from 'antd';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { useParams } from 'react-router-dom';
-import AppHeader from "../components/Header";
 import "../styles/Perfil.css";
 
 const Perfil = () => {
@@ -68,44 +67,41 @@ const Perfil = () => {
     };
 
     return (
-        <>
-            <AppHeader />
-            <div className="profile-container">
-                <Card title="Perfil do Usuário" bordered>
-                    {profileData ? (
-                        <>
-                            <Descriptions bordered column={1}>
-                                <Descriptions.Item label="Nome">{profileData.nome}</Descriptions.Item>
-                                <Descriptions.Item label="E-mail">{profileData.email}</Descriptions.Item>
-                                <Descriptions.Item label="Senha">
-                                    {showPassword ? profileData.senha : '******'}
-                                    <Button
-                                        type="link"
-                                        onClick={togglePasswordVisibility}
-                                        icon={showPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
-                                        style={{ marginLeft: 10 }}
-                                    />
-                                </Descriptions.Item>
-                                {profileData.endereco && (
-                                    <>
-                                        <Descriptions.Item label="Logradouro">{profileData.endereco.logradouro}</Descriptions.Item>
-                                        <Descriptions.Item label="Bairro">{profileData.endereco.bairro}</Descriptions.Item>
-                                        <Descriptions.Item label="Cidade">{profileData.endereco.cidade}</Descriptions.Item>
-                                        <Descriptions.Item label="Estado">{profileData.endereco.estado}</Descriptions.Item>
-                                        <Descriptions.Item label="Número">{profileData.endereco.numero}</Descriptions.Item>
-                                        <Descriptions.Item label="Complemento">{profileData.endereco.complemento}</Descriptions.Item>
-                                        <Descriptions.Item label="CEP">{profileData.endereco.cep}</Descriptions.Item>
-                                    </>
-                                )}
-                                {renderSpecificData()}
-                            </Descriptions>
-                        </>
-                    ) : (
-                        <p>Carregando dados do perfil...</p>
-                    )}
-                </Card>
-            </div>
-        </>
+        <div className="profile-container">
+            <Card title="Perfil do Usuário" bordered>
+                {profileData ? (
+                    <>
+                        <Descriptions bordered column={1}>
+                            <Descriptions.Item label="Nome">{profileData.nome}</Descriptions.Item>
+                            <Descriptions.Item label="E-mail">{profileData.email}</Descriptions.Item>
+                            <Descriptions.Item label="Senha">
+                                {showPassword ? profileData.senha : '******'}
+                                <Button
+                                    type="link"
+                                    onClick={togglePasswordVisibility}
+                                    icon={showPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+                                    style={{ marginLeft: 10 }}
+                                />
+                            </Descriptions.Item>
+                            {profileData.endereco && (
+                                <>
+                                    <Descriptions.Item label="Logradouro">{profileData.endereco.logradouro}</Descriptions.Item>
+                                    <Descriptions.Item label="Bairro">{profileData.endereco.bairro}</Descriptions.Item>
+                                    <Descriptions.Item label="Cidade">{profileData.endereco.cidade}</Descriptions.Item>
+                                    <Descriptions.Item label="Estado">{profileData.endereco.estado}</Descriptions.Item>
+                                    <Descriptions.Item label="Número">{profileData.endereco.numero}</Descriptions.Item>
+                                    <Descriptions.Item label="Complemento">{profileData.endereco.complemento}</Descriptions.Item>
+                                    <Descriptions.Item label="CEP">{profileData.endereco.cep}</Descriptions.Item>
+                                </>
+                            )}
+                            {renderSpecificData()}
+                        </Descriptions>
+                    </>
+                ) : (
+                    <p>Carregando dados do perfil...</p>
+                )}
+            </Card>
+        </div>
     );
 };
 

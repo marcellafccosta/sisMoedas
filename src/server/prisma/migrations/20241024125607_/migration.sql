@@ -96,6 +96,15 @@ CREATE TABLE `vantagem` (
     PRIMARY KEY (`idvantagem`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `_AlunoVantagem` (
+    `A` INTEGER NOT NULL,
+    `B` INTEGER NOT NULL,
+
+    UNIQUE INDEX `_AlunoVantagem_AB_unique`(`A`, `B`),
+    INDEX `_AlunoVantagem_B_index`(`B`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- AddForeignKey
 ALTER TABLE `aluno` ADD CONSTRAINT `aluno_usuario_id_fkey` FOREIGN KEY (`usuario_id`) REFERENCES `usuario`(`idusuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -122,3 +131,9 @@ ALTER TABLE `transacao` ADD CONSTRAINT `fk_professor` FOREIGN KEY (`professor_id
 
 -- AddForeignKey
 ALTER TABLE `vantagem` ADD CONSTRAINT `fk_empresaparceira` FOREIGN KEY (`empresaparceira_id`) REFERENCES `empresaparceira`(`idempresa`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE `_AlunoVantagem` ADD CONSTRAINT `_AlunoVantagem_A_fkey` FOREIGN KEY (`A`) REFERENCES `aluno`(`idaluno`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `_AlunoVantagem` ADD CONSTRAINT `_AlunoVantagem_B_fkey` FOREIGN KEY (`B`) REFERENCES `vantagem`(`idvantagem`) ON DELETE CASCADE ON UPDATE CASCADE;

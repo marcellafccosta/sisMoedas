@@ -1,26 +1,31 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React from 'react'; 
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'; 
+import AppHeader from './components/Header.jsx'; 
 import Login from './pages/Login.jsx'; 
-import Cadastro from './pages/Cadastro.jsx';
-import Perfil from './pages/Perfil.jsx';
-import AppHeader from './components/Header.jsx';
-import Home from './pages/Home.jsx';
-import Extrato from './pages/Extrato.jsx';
-import Transacao from './pages/Transacao.jsx';
+import Cadastro from './pages/Cadastro.jsx'; 
+import Home from './pages/Home.jsx'; 
 
 function App() {
+  const location = useLocation(); // Get the current location
+
+  // Determine if we should show the header
+  const showHeader = !['/login', '/cadastro'].includes(location.pathname);
+
   return (
-    <Router>
+    <>
+      {showHeader && <AppHeader />}
       <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-        <Route path="/cadastro" element={<Cadastro />} /> 
-        <Route path="/perfil/:idUsuario" element={<Perfil />} /> 
-        <Route path="/extrato" element={<Extrato />} /> 
-        <Route path="/transacao" element={<Transacao />} /> 
+        <Route path="/login" element={<Login />} />
+        <Route path="/cadastro" element={<Cadastro />} />
       </Routes>
-    </Router>
+    </>
   );
 }
 
-export default App;
+const AppWrapper = () => (
+  <Router>
+    <App />
+  </Router>
+);
+
+export default AppWrapper;
