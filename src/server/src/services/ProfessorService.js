@@ -1,5 +1,6 @@
-import { prismaClient } from "../database/prismaClient.js"; // Certifique-se de que o caminho está correto
-
+import { prismaClient } from "../database/prismaClient.js";
+const SALT_ROUNDS = 10;
+import bcrypt from 'bcrypt';
 export class ProfessorService {
     async getAll() {
         try {
@@ -20,7 +21,8 @@ export class ProfessorService {
             const professor = await prismaClient.professor.findUnique({
                 where: { idprofessor: parseInt(id) },
                 include: {
-                    usuario: true
+                    usuario: true,
+                    instituicao: true
                 }
             });
             if (!professor) {
@@ -37,17 +39,17 @@ export class ProfessorService {
             if (!professorData.usuario || !professorData.usuario.nome || !professorData.usuario.email || !professorData.usuario.senha) {
                 throw new Error("Dados de usuário incompletos para o cadastro do professor.");
             }
-
+    
+            // Criptografando a senha antes de salvar no banco de dados
             const professor = await prismaClient.professor.create({
                 data: {
                     cpf: professorData.cpf,
                     departamento: professorData.departamento,
-                    saldomoedas: professorData.saldomoedas || 0,
                     usuario: {
                         create: {
                             nome: professorData.usuario.nome,
                             email: professorData.usuario.email,
-                            senha: professorData.usuario.senha
+                            senha: senhaCriptografada // Usando a senha criptografada
                         }
                     },
                     instituicao: {

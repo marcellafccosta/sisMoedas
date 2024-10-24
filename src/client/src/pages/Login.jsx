@@ -1,16 +1,42 @@
 import React from "react";
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, message } from 'antd'; 
 import "../styles/Login.css";
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; 
 
 const Login = () => {
   const navigate = useNavigate(); 
+  const onFinish = async (values) => {
+    try {
+        console.log('Valores recebidos do formulário: ', values);
+        
+        // Fazendo a requisição de login para o backend
+        const response = await axios.post('http://localhost:3000/api/usuario/login', {
+            email: values.email,
+            senha: values.senha
+        });
 
-  const onFinish = (values) => {
-    console.log('Valores recebidos do formulário: ', values);
-    // Aqui você pode adicionar lógica para autenticar o usuário.
-  };
+        console.log('Resposta da API:', response.data);
+
+        const { token, usuario } = response.data; 
+
+        if (!usuario || !usuario.idusuario) {
+            message.error("ID do usuário não encontrado na resposta.");
+            return;
+        }
+
+        localStorage.setItem('token', token); 
+
+        message.success(`Bem-vindo, ${usuario.nome}!`);
+        navigate(`/perfil/${usuario.idusuario}`); 
+        
+    } catch (error) {
+        console.error('Erro ao fazer login:', error);
+        message.error('Erro ao fazer login. Verifique suas credenciais.');
+    }
+};
+
 
   const handleCadastroClick = () => {
     navigate('/cadastro');

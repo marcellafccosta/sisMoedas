@@ -1,5 +1,6 @@
 import { prismaClient } from "../database/prismaClient.js";
-
+const SALT_ROUNDS = 10;
+import bcrypt from 'bcrypt';
 export class AlunoService {
     // Busca todos os alunos, incluindo endereço e usuário
     async getAll() {
@@ -43,7 +44,10 @@ export class AlunoService {
                 throw new Error("Dados de usuário incompletos para o cadastro do aluno.");
             }
             console.log('Dados recebidos para criação de aluno:', alunoData); // Verificar dados recebidos
-
+    
+            // Criptografa a senha antes de salvar no banco de dados
+            const senhaCriptografada = await bcrypt.hash(alunoData.usuario.senha, SALT_ROUNDS);
+    
             const aluno = await prismaClient.aluno.create({
                 data: {
                     cpf: alunoData.cpf,
@@ -54,7 +58,7 @@ export class AlunoService {
                         create: {  
                             nome: alunoData.usuario.nome,
                             email: alunoData.usuario.email,
-                            senha: alunoData.usuario.senha,
+                            senha: senhaCriptografada, // Salva a senha criptografada
                         }
                     },
                     endereco: {
@@ -74,10 +78,10 @@ export class AlunoService {
                     usuario: true,
                 }
             });
-
+    
             console.log('Aluno e usuário criados com sucesso:', aluno); // Log para confirmar criação
             return aluno;
-
+    
         } catch (error) {
             console.error("Erro ao cadastrar aluno:", error.message); // Log de erro
             throw new Error("Erro ao cadastrar aluno: " + error.message);

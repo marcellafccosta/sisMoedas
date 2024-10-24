@@ -1,5 +1,6 @@
 import { prismaClient } from "../database/prismaClient.js";
-
+import bcrypt from 'bcrypt';
+const SALT_ROUNDS = 10;
 export class UsuarioService {
     async getAll() {
         try {
@@ -48,19 +49,23 @@ export class UsuarioService {
             if (!userData.nome || !userData.email || !userData.senha) {
                 throw new Error("Dados de usuário incompletos. Certifique-se de que nome, email e senha estão preenchidos.");
             }
-
+    
+            // Criptografa a senha antes de salvar no banco de dados
+            const senhaCriptografada = await bcrypt.hash(userData.senha, SALT_ROUNDS);
+    
             const usuario = await prismaClient.usuario.create({
                 data: {
                     nome: userData.nome,
                     email: userData.email,
-                    senha: userData.senha
+                    senha: senhaCriptografada // Aqui salva a senha criptografada
                 }
             });
-
+    
             return usuario;
         } catch (error) {
             throw new Error("Erro ao cadastrar usuário: " + error.message);
         }
+
     }
 
 

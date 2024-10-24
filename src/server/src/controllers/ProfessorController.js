@@ -14,10 +14,17 @@ export class ProfessorController {
     async getById(req, res) {
         const { id } = req.params; // Obter o ID da requisição
         try {
+            const { id } = req.params;
+
+            if (isNaN(parseInt(id))) {
+                return res.status(400).json({ message: "ID inválido" });
+            }
+
             const professor = await ProfessorService.getById(id);
             res.status(200).json(professor);
         } catch (error) {
-            res.status(404).json({ error: error.message });
+            console.error('Erro ao buscar professor: ', error.message);
+            res.status(500).json({ error: error.message });
         }
     }
 
