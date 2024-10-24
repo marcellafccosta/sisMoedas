@@ -5,9 +5,9 @@ export class UsuarioService {
         try {
             const usuarios = await prismaClient.usuario.findMany({
                 include: {
-                  aluno: true,  // Inclui a relação com alunos
-                  professor: true,  // Inclui a relação com professores
-                  empresa: true,  // Inclui a relação com empresas parceiras
+                  aluno: true, 
+                  professor: true, 
+                  empresa: true,  
                 }
               });
               
@@ -21,20 +21,26 @@ export class UsuarioService {
     async getById(id) {
         try {
             const usuario = await prismaClient.usuario.findUnique({
-                where: {
-                    idusuario: parseInt(id)
+                where: { idusuario: parseInt(id, 10) },
+                include: {
+                    aluno: true,
+                    professor: true,
+                    empresa: true,
+
                 },
             });
-
+    
             if (!usuario) {
                 throw new Error("Usuário não encontrado");
             }
-
+    
             return usuario;
         } catch (error) {
+            console.error("Erro ao buscar usuário:", error.message);
             throw new Error("Erro ao buscar usuário: " + error.message);
         }
     }
+    
 
 
     async createUser(userData) {
