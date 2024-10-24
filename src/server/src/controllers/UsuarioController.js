@@ -16,26 +16,26 @@ export class UsuarioController {
     async getById(req, res) {
         try {
             const { id } = req.params;
-            if (isNaN(parseInt(id))) {
-                return res.status(400).json({ message: 'ID inválido. Deve ser um número.' });
-            }
-
             const usuario = await UsuarioService.getById(id);
-
-            if (usuario) {
-                res.status(200).json(usuario);
-            } else {
-                res.status(404).json({ message: `Usuário com ID ${id} não encontrado.` });
-            }
+    
+            // Estrutura os dados de acordo com o que foi especificado
+            const responseData = {
+                idusuario: usuario.idusuario,
+                nome: usuario.nome,
+                email: usuario.email,
+                senha: usuario.senha,
+                aluno: usuario.aluno,
+                professor: usuario.professor,
+                empresa: usuario.empresa,
+            };
+    
+            res.status(200).json(responseData);
         } catch (error) {
-            console.error('Erro ao buscar usuário:', error);
-
-            res.status(500).json({
-                message: 'Não foi possível buscar o usuário. Por favor, verifique o ID e tente novamente.',
-                error: error.message,
-            });
+            console.error("Erro ao buscar usuário:", error.message);
+            res.status(404).json({ message: "Usuário não encontrado" });
         }
     }
+    
 
 
     async createUser(req, res) {

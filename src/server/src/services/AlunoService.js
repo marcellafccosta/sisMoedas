@@ -39,6 +39,9 @@ export class AlunoService {
     // Cria um novo aluno e conecta ou cria um endereço associado
     async createAluno(alunoData) {
         try {
+            if (!alunoData.usuario || !alunoData.usuario.nome || !alunoData.usuario.email || !alunoData.usuario.senha) {
+                throw new Error("Dados de usuário incompletos para o cadastro do aluno.");
+            }
             console.log('Dados recebidos para criação de aluno:', alunoData); // Verificar dados recebidos
 
             const aluno = await prismaClient.aluno.create({
@@ -46,12 +49,12 @@ export class AlunoService {
                     cpf: alunoData.cpf,
                     rg: alunoData.rg,
                     curso: alunoData.curso,
-                    saldomoedas: alunoData.saldomoedas,
+                    saldomoedas: alunoData.saldomoedas || 0,
                     usuario: {
-                        create: {  // Certifique-se de que o usuário está sendo criado aqui
-                            nome: alunoData.nome,
-                            email: alunoData.email,
-                            senha: alunoData.senha,
+                        create: {  
+                            nome: alunoData.usuario.nome,
+                            email: alunoData.usuario.email,
+                            senha: alunoData.usuario.senha,
                         }
                     },
                     endereco: {
@@ -65,6 +68,10 @@ export class AlunoService {
                             cep: alunoData.endereco.cep,
                         }
                     }
+                },
+                include: {  // Inclui os dados completos de endereço e usuário no retorno
+                    endereco: true,
+                    usuario: true,
                 }
             });
 
@@ -78,9 +85,6 @@ export class AlunoService {
     }
 
 
-
-    // Atualiza um aluno existente e seu endereço associado
-    // Atualiza um aluno existente e seu endereço associado
     async updateAluno(alunoId, alunoData) {
         try {
             const updatedAluno = await prismaClient.aluno.update({
