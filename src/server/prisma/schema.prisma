@@ -69,7 +69,7 @@ model endereco {
 model instituicao {
   idinstituicao Int         @id @default(autoincrement())
   nome          String      @db.VarChar(255)
-  endereco_id   Int         // Campo obrigatório
+  endereco_id   Int         
   endereco      endereco    @relation(fields: [endereco_id], references: [idendereco], onDelete: NoAction, onUpdate: NoAction, map: "fk_endereco_instituicao")
   professor     professor[]
 }

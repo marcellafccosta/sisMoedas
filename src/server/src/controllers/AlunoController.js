@@ -20,7 +20,6 @@ export class AlunoController {
         try {
             const { id } = req.params;
 
-            // Verifica se o ID é um número válido
             if (isNaN(parseInt(id))) {
                 return res.status(400).json({ message: 'ID inválido.' });
             }

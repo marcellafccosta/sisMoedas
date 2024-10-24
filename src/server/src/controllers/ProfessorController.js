@@ -15,8 +15,8 @@ export class ProfessorController {
         try {
             const { id } = req.params;
 
-            if (isNaN(id)) {
-                return res.status(400).json({ error: "ID inválido" });
+            if (isNaN(parseInt(id))) {
+                return res.status(400).json({ message: "ID inválido" });
             }
 
             const professor = await ProfessorService.getById(id);
@@ -27,6 +27,7 @@ export class ProfessorController {
                 return res.status(404).json({ message: `Professor com ID ${id} não encontrado.` });
             }
         } catch (error) {
+            console.error('Erro ao buscar professor: ', error.message);
             res.status(500).json({ error: error.message });
         }
     }

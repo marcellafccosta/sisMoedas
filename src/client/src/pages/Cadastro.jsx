@@ -48,7 +48,7 @@ const Cadastro = () => {
                 },
                 tipo: values.tipo,
             };
-    
+
             // Adicionando campos específicos com base no tipo de usuário
             if (values.tipo === "aluno") {
                 payload.cpf = values.cpf;
@@ -70,9 +70,9 @@ const Cadastro = () => {
             } else if (values.tipo === "empresaparceira") {
                 payload.cnpj = values.cnpj;
             }
-    
+
             console.log("Payload enviado:", payload); // Log para verificar o payload enviado
-    
+
             if (!payload.usuario.nome || !payload.usuario.email || !payload.usuario.senha) {
                 message.error("Dados insuficientes. Verifique se todos os campos de usuário estão preenchidos.");
                 return;
@@ -98,7 +98,7 @@ const Cadastro = () => {
                     message.error("Tipo de usuário inválido!");
                     return;
             }
-    
+
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
@@ -106,21 +106,21 @@ const Cadastro = () => {
                 },
                 body: JSON.stringify(payload),
             });
-    
-          
-        if (!response.ok) {
-            const errorData = await response.json();
-            console.error("Erro ao cadastrar:", errorData);
-            throw new Error(errorData.message || 'Erro ao cadastrar usuário');
-        } else {
-            message.success('Usuário cadastrado com sucesso!');
-            form.resetFields();
+
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Erro ao cadastrar:", errorData);
+                throw new Error(errorData.message || 'Erro ao cadastrar usuário');
+            } else {
+                message.success('Usuário cadastrado com sucesso!');
+                form.resetFields();
+            }
+        } catch (error) {
+            console.error("Erro ao cadastrar:", error.message);
+            message.error(`Erro ao cadastrar ${values.tipo}: ${error.message}`);
         }
-    } catch (error) {
-        console.error("Erro ao cadastrar:", error.message);
-        message.error(`Erro ao cadastrar ${values.tipo}: ${error.message}`);
-    }
-};
+    };
 
 
     const onFinish = (values) => {
@@ -137,7 +137,7 @@ const Cadastro = () => {
         { label: "Administrativo", value: "Administrativo" },
         { label: "Extensão", value: "Extensao" },
     ];
-    
+
     return (
         <div className="cadastro-container">
             <Form
@@ -151,15 +151,15 @@ const Cadastro = () => {
 
                 <Form.Item
                     name="nome"
-                    label="Nome completo"
+                    label="Nome"
                     rules={[
                         {
                             required: true,
-                            message: 'Por favor, insira seu nome completo!',
+                            message: 'Por favor, insira seu nome!',
                         },
                     ]}
                 >
-                    <Input placeholder="Nome Completo" />
+                    <Input placeholder="Nome" />
                 </Form.Item>
 
                 <Form.Item
@@ -271,15 +271,15 @@ const Cadastro = () => {
                             <Input placeholder="Digite o CPF" />
                         </Form.Item>
 
-                       <Form.Item label="Departamento" name="departamento" rules={[{ required: true, message: 'Departamento é obrigatório' }]}>
-    <Select placeholder="Selecione o departamento">
-        {departamentos.map((departamento) => (
-            <Option key={departamento.value} value={departamento.value}>
-                {departamento.label}
-            </Option>
-        ))}
-    </Select>
-</Form.Item>
+                        <Form.Item label="Departamento" name="departamento" rules={[{ required: true, message: 'Departamento é obrigatório' }]}>
+                            <Select placeholder="Selecione o departamento">
+                                {departamentos.map((departamento) => (
+                                    <Option key={departamento.value} value={departamento.value}>
+                                        {departamento.label}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
 
                         <Form.Item label="Instituição" name="instituicao_id" rules={[{ required: true, message: 'Instituição é obrigatória' }]}>
                             <Select placeholder="Selecione a instituição">
@@ -307,15 +307,24 @@ const Cadastro = () => {
         return (
             <>
                 <Form.Item label="Endereço">
-                    <Input.Group compact>
-                        <Form.Item name="cep" rules={[{ required: true, message: 'CEP é obrigatório' }]} style={{ width: '50%' }}>
+
+                        <Form.Item name="cep" rules={[{ required: true, message: 'CEP é obrigatório' }]} style={{ width: '100%' }}>
                             <Input placeholder="CEP" />
                         </Form.Item>
-                        <Form.Item name="logradouro" rules={[{ required: true, message: 'Logradouro é obrigatório' }]} style={{ width: '50%' }}>
+                        
+
+                </Form.Item>
+                <Form.Item>
+                    <Input.Group compact>
+                    <Form.Item name="logradouro" rules={[{ required: true, message: 'Logradouro é obrigatório' }]} style={{ width: '50%' }}>
                             <Input placeholder="Logradouro" />
+                        </Form.Item>
+                        <Form.Item name="bairro" style={{ width: '50%' }}>
+                            <Input placeholder="Bairro" />
                         </Form.Item>
                     </Input.Group>
                 </Form.Item>
+
                 <Form.Item>
                     <Input.Group compact>
                         <Form.Item name="numero" rules={[{ required: true, message: 'Número é obrigatório' }]} style={{ width: '50%' }}>

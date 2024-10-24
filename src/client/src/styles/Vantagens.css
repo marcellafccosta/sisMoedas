@@ -5,9 +5,9 @@
 
 .vantagens-container {
     padding: 2rem;
-    background-color: #f5f5f5; /* Cor de fundo mais suave */
+    background-color: #f5f5f5; 
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
  
   }
   
@@ -17,11 +17,11 @@
     color: white;
     padding: 10px 30px;
     font-size: 14px;
-    transition: background-color 0.3s; /* Transição suave ao passar o mouse */
+    transition: background-color 0.3s; 
   }
   
   .cadastro-button:hover {
-    background-color: #045BA0; /* Efeito hover */
+    background-color: #045BA0; 
   }
   
   .vantagem-card {
@@ -30,7 +30,7 @@
   
   
   .vantagem-image-container {
-    overflow: hidden; /* Oculta qualquer parte da imagem que exceda o contêiner */
+    overflow: hidden; 
   }
   
   .vantagem-image {
@@ -42,6 +42,6 @@
   
   
   .pagination {
-    margin-top: 2rem; /* Espaçamento superior para a paginação */
+    margin-top: 2rem; 
   }
   
