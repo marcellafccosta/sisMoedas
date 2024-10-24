@@ -21,7 +21,8 @@ export class ProfessorService {
             const professor = await prismaClient.professor.findUnique({
                 where: { id: parseInt(id) },
                 include: {
-                    usuario: true
+                    usuario: true,
+                    instituicao: true
                 }
             });
             if (!professor) {
@@ -35,7 +36,6 @@ export class ProfessorService {
 
     async createProfessor(professorData) {
         try {
-            // Verificando se os dados de usuário estão presentes
             if (!professorData.usuario || !professorData.usuario.nome || !professorData.usuario.email || !professorData.usuario.senha) {
                 throw new Error("Dados de usuário incompletos para o cadastro do professor.");
             }

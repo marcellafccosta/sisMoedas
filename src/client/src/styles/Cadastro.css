@@ -1,14 +1,17 @@
 /* Cadastro.css */
 
+body {
+    background: linear-gradient(135deg, #3282b8, #0f4c75);
+
+}
+
 .cadastro-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100vw; /* Garante que ocupe toda a largura da tela */
-    height: 100vh; /* Garante que ocupe toda a altura da tela */
-    background: linear-gradient(135deg, #3282b8, #0f4c75);
     padding: 20px;
     margin: 0;
+    
 }
 
 .cadastro-form {
