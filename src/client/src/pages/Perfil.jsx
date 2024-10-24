@@ -16,19 +16,20 @@ const Perfil = () => {
 
     useEffect(() => {
         const fetchProfileData = async () => {
+            console.log('ID do usuário:', idUsuario); // Log para verificar o ID
             try {
                 const response = await fetch(`http://localhost:3000/api/usuario/${idUsuario}`);
                 if (response.ok) {
                     const data = await response.json();
                     setProfileData(data);
                 } else {
-                    console.error('Erro ao buscar dados do perfil');
+                    console.error('Erro ao buscar dados do perfil', response.status); // Logar o status de erro
                 }
             } catch (error) {
                 console.error('Erro na requisição:', error);
             }
         };
-
+    
         if (idUsuario) {
             fetchProfileData();
         }
