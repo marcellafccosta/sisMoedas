@@ -76,22 +76,54 @@ export class ProfessorService {
 
     async updateProfessor(professorId, professorData) {
         try {
+            console.log('Dados para atualização:', {
+                id: parseInt(professorId),
+                cpf: professorData.cpf,
+                departamento: professorData.departamento,
+                saldomoedas: professorData.saldomoedas,
+                nomeUsuario: professorData.usuario?.nome,
+                emailUsuario: professorData.usuario?.email,
+                senhaUsuario: professorData.usuario?.senha,
+                instituicaoId: professorData.instituicao_id
+            });
+    
             const updatedProfessor = await prismaClient.professor.update({
-                where: { id: parseInt(professorId) },
-                data: professorData,
+                where: { idprofessor: parseInt(professorId) },
+                data: {
+                    cpf: professorData.cpf,
+                    departamento: professorData.departamento,
+                    saldomoedas: professorData.saldomoedas,
+                    usuario: professorData.usuario ? {
+                        update: {
+                            nome: professorData.usuario.nome,
+                            email: professorData.usuario.email,
+                            senha: professorData.usuario.senha
+                        }
+                    } : undefined,
+                    instituicao: professorData.instituicao_id ? {
+                        connect: {
+                            idinstituicao: parseInt(professorData.instituicao_id, 10)
+                        },
+                    } : undefined,
+                },
                 include: {
                     usuario: true,
                     instituicao: true
                 }
-            })
+            });
+    
             if (!updatedProfessor) {
                 throw new Error("Professor não encontrado");
             }
             return updatedProfessor;
         } catch (error) {
+            console.error('Erro ao atualizar professor:', error);
             throw new Error("Erro ao atualizar professor: " + error.message);
         }
     }
+    
+    
+    
 
     async deleteProfessor(id) {
         try {
