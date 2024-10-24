@@ -46,7 +46,8 @@ export class TransacaoService {
                     quantidade: transacaoData.quantidade,
                     data: transacaoData.data,
                     aluno: transacaoData.aluno_id ? { connect: { idaluno: transacaoData.aluno_id } } : undefined,
-                    professor: transacaoData.professor_id ? { connect: { idprofessor: transacaoData.professor_id } } : undefined
+                    professor: transacaoData.professor_id ? { connect: { idprofessor: transacaoData.professor_id } } : undefined,
+                    motivo: transacaoData.motivo // Adicionando o campo motivo
                 }
             });
             return transacao;
@@ -66,7 +67,8 @@ export class TransacaoService {
                     quantidade: transacaoData.quantidade,
                     data: transacaoData.data,
                     aluno: transacaoData.aluno_id ? { connect: { idaluno: transacaoData.aluno_id } } : undefined,
-                    professor: transacaoData.professor_id ? { connect: { idprofessor: transacaoData.professor_id } } : undefined
+                    professor: transacaoData.professor_id ? { connect: { idprofessor: transacaoData.professor_id } } : undefined,
+                    motivo: transacaoData.motivo // Adicionando o campo motivo
                 }
             });
             return updatedTransacao;

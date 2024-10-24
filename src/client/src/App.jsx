@@ -6,6 +6,7 @@ import Perfil from './pages/Perfil.jsx';
 import AppHeader from './components/Header.jsx';
 import Home from './pages/Home.jsx';
 import Extrato from './pages/Extrato.jsx';
+import Transacao from './pages/Transacao.jsx';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/cadastro" element={<Cadastro />} /> 
         <Route path="/perfil/:idUsuario" element={<Perfil />} /> 
         <Route path="/extrato" element={<Extrato />} /> 
+        <Route path="/transacao" element={<Transacao />} /> 
       </Routes>
     </Router>
   );

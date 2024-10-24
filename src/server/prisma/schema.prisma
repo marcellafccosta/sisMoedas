@@ -83,7 +83,9 @@ model transacao {
   professor_id Int?
   aluno        aluno?        @relation(fields: [aluno_id], references: [idaluno], onDelete: NoAction, onUpdate: NoAction, map: "fk_aluno")
   professor    professor?    @relation(fields: [professor_id], references: [idprofessor], onDelete: NoAction, onUpdate: NoAction, map: "fk_professor")
+  motivo       String?       @db.Text
 }
+
 
 model vantagem {
   idvantagem         Int              @id @default(autoincrement())
