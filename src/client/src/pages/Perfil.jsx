@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Descriptions, Button, Input, message, Card } from 'antd';
+import { Descriptions, Button, Input, message, Card, Modal } from 'antd';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { useParams, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import AppHeader from "../components/Header";
 import "../styles/Perfil.css";
 import { Typography, Grid } from "@mui/material";
@@ -12,6 +13,7 @@ const Perfil = () => {
     const { idUsuario } = useParams();
     const [isEditing, setIsEditing] = useState(false);
     const [userData, setUserData] = useState({});
+    const navigate = useNavigate();
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -31,7 +33,6 @@ const Perfil = () => {
                         aluno: data.aluno ? { ...data.aluno[0] } : {}
                     });
 
-                    // Verifica se é aluno, professor ou empresa
                     if (data.aluno && data.aluno.length > 0) {
                         const alunoId = data.aluno[0].idaluno;
                         const alunoResponse = await fetch(`http://localhost:3000/api/aluno/${alunoId}`);
@@ -50,7 +51,7 @@ const Perfil = () => {
                             setUserData({ ...data, professor: [professorData] });
                         }
                     }
-                     else if (data.empresa && data.empresa.length > 0) {
+                    else if (data.empresa && data.empresa.length > 0) {
                         const empresaId = data.empresa[0].idempresa;
                         try {
                             const empresaResponse = await fetch(`http://localhost:3000/api/empresaparceira/${empresaId}`);
@@ -75,7 +76,7 @@ const Perfil = () => {
                 console.error('Erro na requisição:', error);
             }
         };
-    
+
         if (idUsuario) {
             fetchProfileData();
         }
@@ -84,11 +85,11 @@ const Perfil = () => {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         const keys = name.split('.');
-    
+
         setUserData((prevData) => {
             let updatedData = { ...prevData };
             let current = updatedData;
-    
+
             // Navega pelo objeto até chegar na chave final
             for (let i = 0; i < keys.length - 1; i++) {
                 if (!current[keys[i]]) {
@@ -96,14 +97,14 @@ const Perfil = () => {
                 }
                 current = current[keys[i]];
             }
-    
+
             // Atualiza o valor da última chave
             current[keys[keys.length - 1]] = value;
-    
+
             return updatedData;
         });
     };
-    
+
 
 
     const handleEdit = () => {
@@ -122,7 +123,7 @@ const Perfil = () => {
         try {
             let url = '';
             let dataToSend = {};
-    
+
             if (userData.aluno && userData.aluno.idaluno) {
                 url = `http://localhost:3000/api/aluno/${userData.aluno.idaluno}`;
                 dataToSend = { ...userData.aluno };
@@ -137,10 +138,10 @@ const Perfil = () => {
                 url = `http://localhost:3000/api/usuario/${idUsuario}`;
                 dataToSend = { ...userData };
             }
-    
+
             console.log('URL:', url);
             console.log('Dados enviados:', dataToSend);
-    
+
             const response = await fetch(url, {
                 method: 'PUT',
                 headers: {
@@ -148,7 +149,7 @@ const Perfil = () => {
                 },
                 body: JSON.stringify(dataToSend),
             });
-    
+
             if (response.ok) {
                 const updatedData = await response.json();
                 setProfileData(updatedData);
@@ -163,7 +164,36 @@ const Perfil = () => {
             message.error('Erro ao atualizar perfil');
         }
     };
-    
+
+    const handleDeleteAccount = async () => {
+        Modal.confirm({
+            title: 'Confirmar Exclusão',
+            content: 'Tem certeza de que deseja deletar esta conta? Esta ação não pode ser desfeita.',
+            okText: 'Deletar',
+            okType: 'danger',
+            
+            cancelText: 'Cancelar',
+            onOk: async () => {
+                try {
+                    const response = await fetch(`http://localhost:3000/api/usuario/${idUsuario}`, {
+                        method: 'DELETE',
+                    });
+
+                    if (response.ok) {
+                        message.success('Conta deletada com sucesso!');
+                        navigate('/');
+                    } else {
+                        message.error('Erro ao deletar a conta');
+                    }
+                } catch (error) {
+                    console.error('Erro ao deletar conta:', error);
+                    message.error('Erro ao deletar conta');
+                }
+            },
+        });
+    };
+
+
 
     const renderSpecificData = () => {
         if (profileData?.aluno?.length > 0) {
@@ -305,8 +335,8 @@ const Perfil = () => {
             </Descriptions.Item>
             <Descriptions.Item label="Saldo Moedas">
                 {isEditing ? (
-                    <Input name="professor.saldomoedas" 
-                    value={userData.professor?.saldomoedas} onChange={handleInputChange} disabled />
+                    <Input name="professor.saldomoedas"
+                        value={userData.professor?.saldomoedas} onChange={handleInputChange} disabled />
                 ) : (
                     professor.saldomoedas
                 )}
@@ -375,21 +405,22 @@ const Perfil = () => {
         <>
             <AppHeader />
             <div className="profile-container">
-            <Card
-    title="Perfil do Usuário"
-    bordered
-    style={{ width: '100%', maxWidth: '800px', height: 'fit-content' }} // Ajuste aqui para garantir que o Card também se ajuste ao conteúdo
-    extra={
-        isEditing ? (
-            <>
-                <Button type="primary" onClick={handleSave}>Salvar</Button>
-                <Button style={{ marginLeft: '10px' }} onClick={() => setIsEditing(false)}>Cancelar</Button>
-            </>
-        ) : (
-            <Button type="primary" onClick={handleEdit}>Editar</Button>
-        )
-    }
->
+                <Card
+                    title="Perfil do Usuário"
+                    bordered
+                    style={{ width: '100%', maxWidth: '800px', height: 'fit-content' }} // Ajuste aqui para garantir que o Card também se ajuste ao conteúdo
+                    extra={
+                        isEditing ? (
+                            <>
+                                <Button type="primary" onClick={handleSave}>Salvar</Button>
+                                <Button style={{ marginLeft: '10px' }} onClick={() => setIsEditing(false)}>Cancelar</Button>
+                            </>
+                        ) : (
+                            <><Button type="primary" onClick={handleEdit}>Editar</Button>
+                            <Button type="danger" style={{ marginLeft: '10px', backgroundColor:"#a22020", color:"white" }} onClick={handleDeleteAccount}>Deletar Conta</Button></>
+                        )
+                    }
+                >
                     {profileData ? (
                         <>
                             <Descriptions bordered column={2}>
