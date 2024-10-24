@@ -5,15 +5,19 @@ import Perfil from '../pages/Perfil.jsx';
 import Home from '../pages/Home.jsx';
 import Extrato from '../pages/Extrato.jsx';
 import Transacao from '../pages/Transacao.jsx';
-import logo from '../assets/LogoSisMoeda.svg'; // Ensure the correct path and extension
+import Vantagens from '../pages/Vantagens.jsx';
+import CadastroVantagem from '../pages/CadastroVantagem.jsx';
+import VantagemDetalhe from '../pages/VantagemDetalhe.jsx';
+import logo from '../assets/LogoSisMoeda.svg'; // Certifique-se de usar o caminho e extensão corretos
 
 const { Header, Content, Footer } = Layout;
 
 const items = [
   { key: 'home', label: <Link to="/">Home</Link> },
-  { key: 'perfil', label: <Link to="/perfil/1">Perfil</Link> },
-  { key: 'extrato', label: <Link to="/extrato">Extrato</Link> },
+  { key: 'perfil', label: <Link to="/perfil/1">Perfil</Link> }, // Exemplo de idUsuario
+  { key: 'extrato', label: <Link to="/extrato/1">Extrato</Link> }, // Exemplo de idUsuario
   { key: 'vantagens', label: <Link to="/vantagens">Vantagens</Link> },
+  { key: 'cadastroVantagem', label: <Link to="/cadastroVantagem">Cadastro de Vantagem</Link> },
 ];
 
 const AppHeader = () => {
@@ -53,7 +57,7 @@ const AppHeader = () => {
         </Breadcrumb>
         <div
           style={{
-            minHeight: 'calc(100vh - 200px)', // Adjust this based on your layout
+            minHeight: 'calc(100vh - 200px)', // Ajuste baseado no seu layout
             padding: 24,
             borderRadius: borderRadiusLG,
             background: colorBgContainer,
@@ -62,8 +66,11 @@ const AppHeader = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/perfil/:idUsuario" element={<Perfil />} />
-            <Route path="/extrato" element={<Extrato />} />
-            <Route path="/transacao" element={<Transacao />} />
+            <Route path="/extrato/:idUsuario" element={<Extrato />} />
+            <Route path="/transacao/:idUsuario" element={<Transacao />} />
+            <Route path="/vantagens" element={<Vantagens />} />
+            <Route path="/cadastroVantagem" element={<CadastroVantagem />} />
+            <Route path="/VantagemDetalhe/:id" element={<VantagemDetalhe />} />
           </Routes>
         </div>
       </Content>

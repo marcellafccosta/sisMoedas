@@ -4,10 +4,12 @@ import AppHeader from './components/Header.jsx';
 import Login from './pages/Login.jsx'; 
 import Cadastro from './pages/Cadastro.jsx';
 import Perfil from './pages/Perfil.jsx';
-import AppHeader from './components/Header.jsx';
 import CadastroVantagem from './pages/CadastroVantagem.jsx';
 import Vantagens from './pages/Vantagens.jsx';
 import VantagemDetalhe from './pages/VantagemDetalhe.jsx';
+import { ExceptionMap } from 'antd/es/result/index.js';
+import Extrato from './pages/Extrato.jsx';
+import Transacao from './pages/Transacao.jsx';
 
 
 function App() {
@@ -26,6 +28,9 @@ function App() {
         <Route path="/Vantagens" element={<Vantagens />} /> 
         <Route path="/VantagemDetalhe/:id" element={<VantagemDetalhe />} /> 
         <Route path="/perfil/:idUsuario" element={<Perfil />} /> 
+        <Route path="/extrato/:idUsuario" element={<Extrato />} /> 
+        <Route path="/transacao/:idUsuario" element={<Transacao />} /> 
+
       </Routes>
     </>
   );
