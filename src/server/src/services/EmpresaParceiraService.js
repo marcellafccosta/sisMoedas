@@ -37,24 +37,14 @@ export class EmpresaParceiraService {
         }
     }
 
-
     async createEmpresaparceira(empresaData) {
         try {
-            // Verifique se todos os campos obrigatórios foram preenchidos
-            if (!empresaData.cnpj) {
-                throw new Error("O CNPJ é obrigatório.");
+
+            if (!empresaData.usuario || !empresaData.usuario.nome || !empresaData.usuario.email || !empresaData.usuario.senha) {
+                throw new Error("Dados de usuário incompletos para o cadastro da empresa parceira.");
             }
-            if (!empresaData.usuario?.nome) {
-                throw new Error("O nome do usuário é obrigatório.");
-            }
-            if (!empresaData.usuario?.email) {
-                throw new Error("O e-mail do usuário é obrigatório.");
-            }
-            if (!empresaData.usuario?.senha) {
-                throw new Error("A senha do usuário é obrigatória.");
-            }
-    
-            // Criação da empresa
+
+
             const empresa = await prismaClient.empresaparceira.create({
                 data: {
                     cnpj: empresaData.cnpj,
@@ -65,24 +55,24 @@ export class EmpresaParceiraService {
                             senha: empresaData.usuario.senha,
                         },
                     },
-                    // `vantagem` não é especificado para ficar vazio por padrão
+
                 },
                 include: {
                     usuario: true,
-                    vantagem: true,  // Incluir vantagem para confirmar que está vazio no retorno
+
                 },
             });
-    
-            console.log('Empresa cadastrada com sucesso:', empresa); // Log do sucesso
+
+            console.log('Empresa cadastrada com sucesso:', empresa);
             return empresa;
         } catch (error) {
             console.error("Erro ao cadastrar empresa parceira:", error.message);
             throw new Error("Erro ao cadastrar empresa parceira: " + error.message);
         }
     }
-    
-    
-    
+
+
+
 
 
     async updateEmpresaparceira(empresaId, empresaData) {
@@ -124,34 +114,34 @@ export class EmpresaParceiraService {
                     usuario: true  // Inclui o relacionamento com o usuário
                 }
             });
-    
+
             if (!empresa) {
                 throw new Error("Empresa parceira não encontrada");
             }
-    
+
             // Exclui todas as vantagens associadas à empresa parceira
             await prismaClient.vantagem.deleteMany({
                 where: { empresaparceira_id: parseInt(id) },
             });
-    
+
             // Exclui a empresa parceira e o usuário relacionado
             const deletedEmpresa = await prismaClient.empresaparceira.delete({
                 where: { idempresa: parseInt(id) }
             });
-    
+
             // Exclui o usuário associado
             await prismaClient.usuario.delete({
                 where: { idusuario: empresa.usuario_id }  // Deleta o usuário associado à empresa parceira
             });
-    
+
             return deletedEmpresa;
         } catch (error) {
             throw new Error("Erro ao deletar empresa parceira: " + error.message);
         }
     }
-    
-    
-    
+
+
+
 }
 
 export default new EmpresaParceiraService();

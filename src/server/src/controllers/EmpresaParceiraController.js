@@ -37,19 +37,11 @@ export class EmpresaParceiraController {
     // Função para criar uma nova empresa parceira
     async createEmpresaParceira(req, res) {
         try {
-            const { cnpj, nome, email, senha } = req.body;  // Extraindo os dados corretamente
-
-            // Checagem para garantir que os dados necessários estão presentes
-            if (!cnpj || !nome || !email || !senha) {
-                return res.status(400).json({ message: 'Dados insuficientes. Verifique se todos os campos estão preenchidos.' });
-            }
-
-            const empresaData = { cnpj, nome, email, senha };
+            const empresaData = req.body;
             const novaEmpresa = await EmpresaParceiraService.createEmpresaparceira(empresaData);
             res.status(201).json(novaEmpresa);
         } catch (error) {
-            console.error("Erro ao cadastrar empresa parceira:", error.message);
-            res.status(500).json({ message: 'Não foi possível cadastrar a empresa parceira. Tente novamente mais tarde.' });
+            res.status(500).json({ error: error.message });
         }
     }
 
