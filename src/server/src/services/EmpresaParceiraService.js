@@ -17,17 +17,17 @@ export class EmpresaParceiraService {
         }
     }
 
-    // Busca uma empresa parceira por ID
     async getById(id) {
         try {
             const empresa = await prismaClient.empresaparceira.findUnique({
-                where: { idempresa: parseInt(id) },
+                where: { idempresa: parseInt(id) }, 
                 include: {
                     usuario: true,
                     vantagem: true
                 }
             });
             if (!empresa) {
+                console.error("Empresa parceira com ID " + id + " não encontrada");
                 throw new Error("Empresa parceira não encontrada");
             }
             return empresa;
@@ -36,6 +36,7 @@ export class EmpresaParceiraService {
             throw new Error("Erro ao buscar empresa parceira: " + error.message);
         }
     }
+    
 
     async createEmpresaparceira(empresaData) {
         try {

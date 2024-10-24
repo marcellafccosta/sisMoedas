@@ -18,7 +18,7 @@ export class ProfessorService {
     async getById(id) {
         try {
             const professor = await prismaClient.professor.findUnique({
-                where: { id: parseInt(id) },
+                where: { idprofessor: parseInt(id) },
                 include: {
                     usuario: true,
                     instituicao: true
