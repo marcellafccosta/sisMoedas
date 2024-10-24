@@ -54,20 +54,21 @@ export class AlunoController {
 
 
      // Função para atualizar um aluno
-     async updateAluno(req, res) {
+     async updateAluno(req, res) { 
         try {
-            const { id } = req.params;
+            const { id } = req.params; // Certificando-se de pegar o id da rota
             const alunoData = req.body;
-
+    
             // Verifica se o ID é um número válido
             if (isNaN(parseInt(id))) {
                 return res.status(400).json({ message: 'ID inválido.' });
             }
-
+    
             console.log('Dados recebidos para atualização:', alunoData);
-
+    
+            // Chama o serviço passando o id e os dados do aluno
             const alunoAtualizado = await AlunoService.updateAluno(id, alunoData);
-
+    
             if (alunoAtualizado) {
                 res.status(200).json(alunoAtualizado);
             } else {
@@ -78,6 +79,7 @@ export class AlunoController {
             res.status(500).json({ message: 'Não foi possível atualizar o aluno. Tente novamente mais tarde.' });
         }
     }
+    
 
     // Função para deletar um aluno
     async deleteAluno(req, res) {

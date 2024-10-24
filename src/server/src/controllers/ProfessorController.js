@@ -12,25 +12,14 @@ export class ProfessorController {
     }
 
     async getById(req, res) {
+        const { id } = req.params; // Obter o ID da requisição
         try {
-            const { id } = req.params;
-
-            if (isNaN(id)) {
-                return res.status(400).json({ error: "ID inválido" });
-            }
-
             const professor = await ProfessorService.getById(id);
-
-            if (professor) {
-                res.status(200).json(professor);
-            } else {
-                return res.status(404).json({ message: `Professor com ID ${id} não encontrado.` });
-            }
+            res.status(200).json(professor);
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            res.status(404).json({ error: error.message });
         }
     }
-
 
     async createProfessor(req, res) {
         try {
@@ -43,16 +32,15 @@ export class ProfessorController {
     }
 
     async updateProfessor(req, res) {
+        const { id } = req.params;
+        const professorData = req.body;
+
+        if (isNaN(id)) {
+            return res.status(400).json({ error: "ID inválido" });
+        }
+
         try {
-            const { id } = req.params;
-            const professorData = req.body;
-
-            if (isNaN(id)) {
-                return res.status(400).json({ error: "ID inválido" });
-            }
-
             const professorAtualizado = await ProfessorService.updateProfessor(id, professorData);
-
             if (professorAtualizado) {
                 res.status(200).json(professorAtualizado);
             } else {
@@ -62,4 +50,16 @@ export class ProfessorController {
             res.status(500).json({ error: error.message });
         }
     }
+
+    async deleteProfessor(req, res) {
+        const { id } = req.params;
+        try {
+            const deletedProfessor = await ProfessorService.deleteProfessor(id);
+            res.status(200).json(deletedProfessor);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
 }
+
+export default new ProfessorController();

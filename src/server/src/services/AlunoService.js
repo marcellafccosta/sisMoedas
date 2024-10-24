@@ -87,42 +87,63 @@ export class AlunoService {
 
     async updateAluno(alunoId, alunoData) {
         try {
-            const updatedAluno = await prismaClient.aluno.update({
+            // Buscando o aluno existente para garantir que ele exista
+            const alunoExistente = await prismaClient.aluno.findUnique({
+                where: { idaluno: parseInt(alunoId) },
+                include: {
+                    usuario: true,
+                    endereco: true
+                }
+            });
+    
+            if (!alunoExistente) {
+                throw new Error("Aluno não encontrado");
+            }
+    
+            // Preparando os dados para a atualização
+            const dadosAtualizados = {
+                cpf: alunoData.cpf || alunoExistente.cpf,
+                rg: alunoData.rg || alunoExistente.rg,
+                curso: alunoData.curso || alunoExistente.curso,
+                saldomoedas: alunoData.saldomoedas || alunoExistente.saldomoedas
+            };
+    
+            // Atualizando dados do aluno
+            const alunoAtualizado = await prismaClient.aluno.update({
                 where: { idaluno: parseInt(alunoId) },
                 data: {
-                    cpf: alunoData.cpf,
-                    rg: alunoData.rg,
-                    curso: alunoData.curso,
-                    saldomoedas: alunoData.saldomoedas,
-                    usuario: {
-                        connect: { idusuario: alunoData.usuario_id },  // Conectar o usuário
-                    },
-                    endereco: {
+                    ...dadosAtualizados,
+                    // Verificando se dados de usuário precisam ser atualizados
+                    usuario: alunoData.usuario_id ? {
+                        connect: { idusuario: alunoData.usuario_id }
+                    } : undefined,
+                    // Verificando se o endereço precisa ser atualizado
+                    endereco: alunoData.endereco ? {
                         update: {
-                            logradouro: alunoData.endereco.logradouro,
-                            bairro: alunoData.endereco.bairro,
-                            cidade: alunoData.endereco.cidade,
-                            estado: alunoData.endereco.estado,
-                            numero: alunoData.endereco.numero,
-                            complemento: alunoData.endereco.complemento,
-                            cep: alunoData.endereco.cep,
-                        },
-                    },
+                            logradouro: alunoData.endereco.logradouro || alunoExistente.endereco.logradouro,
+                            bairro: alunoData.endereco.bairro || alunoExistente.endereco.bairro,
+                            cidade: alunoData.endereco.cidade || alunoExistente.endereco.cidade,
+                            estado: alunoData.endereco.estado || alunoExistente.endereco.estado,
+                            numero: alunoData.endereco.numero || alunoExistente.endereco.numero,
+                            complemento: alunoData.endereco.complemento || alunoExistente.endereco.complemento,
+                            cep: alunoData.endereco.cep || alunoExistente.endereco.cep,
+                        }
+                    } : undefined
                 },
-                include: {  // Inclui os dados completos de usuário e endereço no retorno
+                include: {
                     endereco: true,
                     usuario: true,
                 },
             });
-            if (!updatedAluno) {
-                throw new Error("Aluno não encontrado");
-            }
-            return updatedAluno;
+    
+            return alunoAtualizado;
         } catch (error) {
+            console.error("Erro ao atualizar aluno: ", error.message);
             throw new Error("Erro ao atualizar aluno: " + error.message);
         }
     }
-
+    
+    
 
     // Deleta um aluno pelo ID
     async deleteAluno(id) {

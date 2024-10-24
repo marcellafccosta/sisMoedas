@@ -1,4 +1,4 @@
-/* Extrato.css */
+
 
 .extrato-container {
     display: flex;
@@ -7,6 +7,7 @@
     width: 100vw;
     height: 100vh; 
     margin: 0;
+    background-color: #f0f2f5;   
 }
 
 .saldo-card {
