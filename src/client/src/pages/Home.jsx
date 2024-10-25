@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Row, Col } from 'antd';
 import { Link } from 'react-router-dom';
 import "../styles/Home.css";
-import logo from "../assets/LogoSisMoeda.svg"; // Certifique-se de que o caminho da imagem está correto
+import logo from "../assets/LogoSisMoeda.svg"; 
 
 const Home = () => {
     return (

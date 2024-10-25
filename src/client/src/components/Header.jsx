@@ -10,7 +10,6 @@ const { Header } = Layout;
 const AppHeader = () => {
     const navigate = useNavigate();
 
-    // Obtém o ID do usuário logado do localStorage
     const idUsuario = localStorage.getItem('idusuario');
 
     const handleMenuClick = (path) => {
@@ -49,7 +48,7 @@ const AppHeader = () => {
         if (idUsuario) {
             navigate(`/perfil/${idUsuario}`);
         } else {
-            navigate('/login'); // Redireciona para login caso não haja usuário logado
+            navigate('/login'); 
         }
     };
 
@@ -64,8 +63,8 @@ const AppHeader = () => {
                     <img onClick={handleLogoClick} src={logo} alt="Logo SisMoeda" className="logo-image" />
                 </div>
                 <Menu mode="horizontal" items={menuItems} className="menu-desktop" />
-                <div className="user-actions">
-                    <Button type="primary" icon={<UserOutlined />} onClick={handlePerfilClick} />
+                <div className="user-actions" >
+                    <Button type="primary" icon={<UserOutlined />} onClick={handlePerfilClick}  />
                 </div>
             </div>
         </Header>

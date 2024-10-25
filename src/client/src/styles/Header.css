@@ -50,8 +50,6 @@
     border: none;
     color: #ffffff;
     transition: background-color 0.3s, border-color 0.3s;
-   
-    
 }
 
 .user-actions .ant-btn:hover {
@@ -77,3 +75,5 @@
 .ant-menu-horizontal .ant-menu-item-selected {
     color: #bbe1fa;
 }
+
+
