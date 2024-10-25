@@ -40,46 +40,41 @@ export class UsuarioController {
     }
     
 
-    async loginUser(req, res) { {
-            try {
-              const { email, senha } = req.body;
-        
-              // Verifica se o usuário existe
-              const usuario = await prismaClient.usuario.findUnique({
-                where: { email }
-              });
-        
-              if (!usuario) {
-                return res.status(401).json({ message: 'Usuário não encontrado!' });
-              }
-        
-              // Verifica se a senha fornecida corresponde à senha criptografada no banco
-              const senhaValida = await bcrypt.compare(senha, usuario.senha);
-              if (!senhaValida) {
-                return res.status(401).json({ message: 'Senha incorreta!' });
-              }
-        
-              // Gera o token JWT
-              const token = jwt.sign({ idusuario: usuario.idusuario }, 'seuSegredoJWT', {
-                expiresIn: '1h'
-              });
-        
-              // Retorna o token e as informações do usuário
-              return res.status(200).json({
-                token,
-                usuario: {
-                idusuario: usuario.idusuario,
-                  nome: usuario.nome,
-                  email: usuario.email
-                }
-              });
-            } catch (error) {
-              console.error('Erro ao fazer login:', error);
-              return res.status(500).json({ message: 'Erro interno no servidor.', error: error.message });
-            }
+    async loginUser(req, res) {
+        try {
+          const { email, senha } = req.body;
+      
+          const usuario = await prismaClient.usuario.findUnique({
+            where: { email },
+            include: { empresa: true }, // Inclua empresa para trazer os dados relacionados
+          });
+      
+          if (!usuario) {
+            return res.status(401).json({ message: 'Usuário não encontrado!' });
           }
-        
+      
+          const senhaValida = await bcrypt.compare(senha, usuario.senha);
+          if (!senhaValida) {
+            return res.status(401).json({ message: 'Senha incorreta!' });
+          }
+      
+          const token = jwt.sign({ idusuario: usuario.idusuario }, 'sismoeda', { expiresIn: '1h' });
+      
+          return res.status(200).json({
+            token,
+            usuario: {
+              idusuario: usuario.idusuario,
+              nome: usuario.nome,
+              email: usuario.email,
+              empresa: usuario.empresa // Inclua o array `empresa` completo
+            }
+          });
+        } catch (error) {
+          console.error('Erro ao fazer login:', error);
+          return res.status(500).json({ message: 'Erro interno no servidor.', error: error.message });
+        }
       }
+      
 
     async createUser(req, res) {
         try {

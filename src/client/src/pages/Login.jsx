@@ -21,22 +21,32 @@ const Login = () => {
 
         const { token, usuario } = response.data; 
 
-        if (!usuario || !usuario.idusuario) {
+        // Verifica se o usuário e a empresa estão presentes na resposta
+        if (usuario && usuario.empresa && usuario.empresa.length > 0) {
+          const idEmpresa = usuario.empresa[0].idempresa;
+          localStorage.setItem('idempresa', idEmpresa); // Salva o ID da empresa no localStorage
+          navigate('/cadastrovantagem'); // Redireciona após login
+        } else {
+          console.error("ID da empresa não retornado");
+        }
+
+        // Verifica se o ID do usuário está na resposta
+        if (usuario && usuario.idusuario) {
+            localStorage.setItem('idusuario', usuario.idusuario); // Salva o ID do usuário no localStorage
+            message.success(`Bem-vindo, ${usuario.nome}!`);
+            navigate(`/perfil/${usuario.idusuario}`);
+        } else {
             message.error("ID do usuário não encontrado na resposta.");
             return;
         }
 
         localStorage.setItem('token', token); 
 
-        message.success(`Bem-vindo, ${usuario.nome}!`);
-        navigate(`/perfil/${usuario.idusuario}`); 
-        
     } catch (error) {
         console.error('Erro ao fazer login:', error);
         message.error('Erro ao fazer login. Verifique suas credenciais.');
     }
-};
-
+  };
 
   const handleCadastroClick = () => {
     navigate('/cadastro');

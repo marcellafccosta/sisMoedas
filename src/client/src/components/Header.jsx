@@ -10,6 +10,9 @@ const { Header } = Layout;
 const AppHeader = () => {
     const navigate = useNavigate();
 
+    // Obtém o ID do usuário logado do localStorage
+    const idUsuario = localStorage.getItem('idusuario');
+
     const handleMenuClick = (path) => {
         navigate(path);
     };
@@ -20,7 +23,6 @@ const AppHeader = () => {
             label: 'Home',
             onClick: () => handleMenuClick('/'),
         },
-       
         {
             key: '2',
             label: 'Login',
@@ -44,7 +46,11 @@ const AppHeader = () => {
     ];
 
     const handlePerfilClick = () => {
-        navigate(`/perfil/${idUsuario}`);
+        if (idUsuario) {
+            navigate(`/perfil/${idUsuario}`);
+        } else {
+            navigate('/login'); // Redireciona para login caso não haja usuário logado
+        }
     };
 
     const handleLogoClick = () => {
@@ -59,8 +65,7 @@ const AppHeader = () => {
                 </div>
                 <Menu mode="horizontal" items={menuItems} className="menu-desktop" />
                 <div className="user-actions">
-                    <Button type="primary" icon={<UserOutlined />} onClick={handlePerfilClick}>
-                    </Button>
+                    <Button type="primary" icon={<UserOutlined />} onClick={handlePerfilClick} />
                 </div>
             </div>
         </Header>
