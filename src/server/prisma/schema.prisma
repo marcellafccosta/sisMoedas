@@ -92,6 +92,7 @@ model vantagem {
   foto               String?            @db.VarChar(255)
   empresaparceira_id Int?
   empresaparceira    empresaparceira? @relation(fields: [empresaparceira_id], references: [idempresa], onDelete: NoAction, onUpdate: NoAction, map: "fk_empresaparceira")
+  
 }
 
 enum departamento {

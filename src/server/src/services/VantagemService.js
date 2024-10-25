@@ -60,24 +60,41 @@ export class VantagemService {
     // Atualiza uma vantagem existente
     async updateVantagem(id, vantagemData) {
         try {
+            const customoedas = parseFloat(vantagemData.customoedas);
+            if (isNaN(customoedas)) {
+                throw new Error("customoedas deve ser um número válido.");
+            }
+    
+            const idempresa = parseInt(vantagemData.empresaparceira_id);
+            if (isNaN(idempresa)) {
+                throw new Error("idempresa deve ser um número inteiro válido.");
+            }
+    
+            // Prepara os dados de atualização
+            const updateData = {
+                descricao: vantagemData.descricao,
+                customoedas: customoedas,
+                empresaparceira: {
+                    connect: { idempresa: idempresa }
+                }
+            };
+    
+            // Atualiza a foto somente se foi enviada uma nova
+            if (vantagemData.foto) {
+                updateData.foto = vantagemData.foto; // Adiciona a nova foto se ela existir
+            }
+    
             const updatedVantagem = await prismaClient.vantagem.update({
                 where: { idvantagem: parseInt(id) },
-                data: {
-                    descricao: vantagemData.descricao,
-                    customoedas: vantagemData.customoedas,
-                    foto: vantagemData.foto,
-                    empresaparceira: {
-                        connect: { idempresa: vantagemData.empresaparceira_id }
-                    }
-                }
+                data: updateData,
             });
+    
             return updatedVantagem;
         } catch (error) {
             console.error("Erro ao atualizar vantagem:", error.message);
             throw new Error("Erro ao atualizar vantagem: " + error.message);
         }
     }
-
     // Deleta uma vantagem pelo ID
     async deleteVantagem(id) {
         try {
