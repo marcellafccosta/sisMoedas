@@ -80,6 +80,7 @@ CREATE TABLE `transacao` (
     `data` TIMESTAMP(6) NOT NULL,
     `aluno_id` INTEGER NULL,
     `professor_id` INTEGER NULL,
+    `usuario_id` INTEGER NOT NULL,
     `motivo` TEXT NULL,
 
     PRIMARY KEY (`idtransacao`)
@@ -128,6 +129,9 @@ ALTER TABLE `transacao` ADD CONSTRAINT `fk_aluno` FOREIGN KEY (`aluno_id`) REFER
 
 -- AddForeignKey
 ALTER TABLE `transacao` ADD CONSTRAINT `fk_professor` FOREIGN KEY (`professor_id`) REFERENCES `professor`(`idprofessor`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE `transacao` ADD CONSTRAINT `fk_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuario`(`idusuario`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE `vantagem` ADD CONSTRAINT `fk_empresaparceira` FOREIGN KEY (`empresaparceira_id`) REFERENCES `empresaparceira`(`idempresa`) ON DELETE NO ACTION ON UPDATE NO ACTION;

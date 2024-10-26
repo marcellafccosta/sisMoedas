@@ -8,13 +8,14 @@ datasource db {
 }
 
 model usuario {
-  idusuario      Int              @id @default(autoincrement())
-  nome           String           @db.VarChar(255)
-  email          String           @unique @db.VarChar(255)
-  senha          String           @db.VarChar(255)
-  aluno          aluno[]         
-  professor      professor[]      
-  empresa        empresaparceira[]
+  idusuario        Int              @id @default(autoincrement())
+  nome             String           @db.VarChar(255)
+  email            String           @unique @db.VarChar(255)
+  senha            String           @db.VarChar(255)
+  aluno            aluno[]         
+  professor        professor[]      
+  empresa          empresaparceira[]
+  transacoes       transacao[]      // Relacionamento com transacao
 }
 
 model aluno {
@@ -77,10 +78,12 @@ model transacao {
   tipo            tipotransacao
   quantidade      Int
   data            DateTime         @db.Timestamp(6)
-  aluno_id        Int?             // Foreign key for aluno
-  professor_id    Int?             // Foreign key for professor
+  aluno_id        Int?             // Foreign key para aluno
+  professor_id    Int?             // Foreign key para professor
+  usuario_id      Int              // Foreign key para usuario
   aluno           aluno?           @relation(fields: [aluno_id], references: [idaluno], onDelete: NoAction, onUpdate: NoAction, map: "fk_aluno")
   professor       professor?       @relation(fields: [professor_id], references: [idprofessor], onDelete: NoAction, onUpdate: NoAction, map: "fk_professor")
+  usuario         usuario          @relation(fields: [usuario_id], references: [idusuario], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario")
   motivo          String?          @db.Text
 }
 

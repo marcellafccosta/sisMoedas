@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { message } from 'antd'; // Import message from Ant Design
 import '../styles/Transacao.css'; // Import your CSS file
+import { useParams, Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const Transacao = () => {
+  const { idUsuario } = useParams(); // Captura o ID do usuário da URL
   const [usuarios, setUsuarios] = useState({});
   const [alunos, setAlunos] = useState([]);
   const [formData, setFormData] = useState({
@@ -13,11 +15,18 @@ const Transacao = () => {
   });
   const [saldoProfessor, setSaldoProfessor] = useState(0);
   const [mensagem, setMensagem] = useState('');
-  
-  const professorIdFixo = 1;
+
+  const professorIdFixo = idUsuario; // Define uma constante para o ID do professor
   const [messageApi, contextHolder] = message.useMessage(); // Initialize message API
+  const navigate = useNavigate(); // Use useNavigate for redirection
 
   useEffect(() => {
+    // Verifica se o idUsuario está disponível
+    if (!professorIdFixo) {
+      setMensagem('ID de usuário não encontrado.');
+      return;
+    }
+
     const fetchAlunos = async () => {
       try {
         const responseAlunos = await axios.get('http://localhost:3000/api/aluno/');
@@ -47,11 +56,14 @@ const Transacao = () => {
 
     fetchAlunos();
     fetchSaldoProfessor();
-  }, []);
+  }, [professorIdFixo]); // Adiciona professorIdFixo como dependência
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: name === 'quantidade' ? Math.max(0, parseInt(value, 10)) || 0 : value });
+    setFormData({
+      ...formData,
+      [name]: name === 'quantidade' ? Math.max(0, parseInt(value, 10)) || 0 : value
+    });
   };
 
   const realizarTransacao = async (e) => {
@@ -82,11 +94,15 @@ const Transacao = () => {
       data: new Date().toISOString(),
       aluno_id: usuarioSelecionado.idaluno,
       professor_id: professorIdFixo,
+      usuario_id: professorIdFixo,
       motivo: formData.motivo,
     };
 
     try {
+      // Envio da transação para a API
       await axios.post('http://localhost:3000/api/transacao/', novaTransacao);
+
+      // Atualização dos saldos do aluno e do professor
       const responseAluno = await axios.get(`http://localhost:3000/api/aluno/${usuarioSelecionado.idaluno}`);
       const saldoAtualAluno = responseAluno.data.saldomoedas || 0;
 
@@ -100,12 +116,12 @@ const Transacao = () => {
 
       setSaldoProfessor(prevSaldo => prevSaldo - quantidade);
       message.success(`Transação realizada: Envio de ${quantidade} moedas para o Aluno: ${usuarios[usuarioSelecionado.usuario_id]}.`);
-      
+
       setFormData({ usuarioId: '', quantidade: 0, motivo: '' });
-      
-      // Redirect to extrato page
-      window.location.href = 'http://localhost:5173/extrato';
-      
+
+      // Redirecionar para a página de extrato usando navigate
+      navigate('/extrato');
+
     } catch (error) {
       console.error('Erro ao realizar a transação:', error);
       message.error('Erro ao realizar a transação. Tente novamente.');
@@ -139,12 +155,12 @@ const Transacao = () => {
 
           <label htmlFor="quantidade">Quantidade de Moedas:</label>
           <input
-            type="text" 
+            type="text"
             name="quantidade"
             value={formData.quantidade}
             onChange={handleInputChange}
-            inputMode="numeric" 
-            pattern="[0-9]*" 
+            inputMode="numeric"
+            pattern="[0-9]*"
             required
           />
 
@@ -153,7 +169,7 @@ const Transacao = () => {
             name="motivo"
             value={formData.motivo}
             onChange={handleInputChange}
-            rows="4" 
+            rows="4"
             required
           />
 

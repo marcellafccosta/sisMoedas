@@ -7,7 +7,8 @@ export class TransacaoService {
             const transacoes = await prismaClient.transacao.findMany({
                 include: {
                     aluno: true,
-                    professor: true
+                    professor: true,
+                    usuario: true // Inclui os dados do usuário relacionado
                 }
             });
             return transacoes;
@@ -24,7 +25,8 @@ export class TransacaoService {
                 where: { idtransacao: parseInt(id) },
                 include: {
                     aluno: true,
-                    professor: true
+                    professor: true,
+                    usuario: true // Inclui os dados do usuário relacionado
                 }
             });
             if (!transacao) {
@@ -47,7 +49,8 @@ export class TransacaoService {
                     data: transacaoData.data,
                     aluno: transacaoData.aluno_id ? { connect: { idaluno: transacaoData.aluno_id } } : undefined,
                     professor: transacaoData.professor_id ? { connect: { idprofessor: transacaoData.professor_id } } : undefined,
-                    motivo: transacaoData.motivo // Adicionando o campo motivo
+                    usuario: transacaoData.usuario_id ? { connect: { idusuario: transacaoData.usuario_id } } : undefined, // Adiciona o relacionamento com usuário
+                    motivo: transacaoData.motivo
                 }
             });
             return transacao;
@@ -68,7 +71,8 @@ export class TransacaoService {
                     data: transacaoData.data,
                     aluno: transacaoData.aluno_id ? { connect: { idaluno: transacaoData.aluno_id } } : undefined,
                     professor: transacaoData.professor_id ? { connect: { idprofessor: transacaoData.professor_id } } : undefined,
-                    motivo: transacaoData.motivo // Adicionando o campo motivo
+                    usuario: transacaoData.usuario_id ? { connect: { idusuario: transacaoData.usuario_id } } : undefined, // Atualiza o relacionamento com usuário
+                    motivo: transacaoData.motivo
                 }
             });
             return updatedTransacao;
@@ -90,6 +94,25 @@ export class TransacaoService {
             throw new Error("Erro ao deletar transação: " + error.message);
         }
     }
+
+    // Adiciona o método getByUsuarioId na classe TransacaoService
+async getByUsuarioId(usuarioId) {
+    try {
+        const transacoes = await prismaClient.transacao.findMany({
+            where: { usuario_id: parseInt(usuarioId) },
+            include: {
+                aluno: true,
+                professor: true,
+                usuario: true
+            }
+        });
+        return transacoes;
+    } catch (error) {
+        console.error("Erro ao buscar transações por usuario_id:", error.message);
+        throw new Error("Erro ao buscar transações por usuario_id: " + error.message);
+    }
+}
+
 }
 
 export default new TransacaoService();

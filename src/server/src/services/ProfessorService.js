@@ -40,6 +40,8 @@ export class ProfessorService {
                 throw new Error("Dados de usuário incompletos para o cadastro do professor.");
             }
     
+            const senhaCriptografada = await bcrypt.hash(professorData.usuario.senha, SALT_ROUNDS);
+            
             // Criptografando a senha antes de salvar no banco de dados
             const professor = await prismaClient.professor.create({
                 data: {
