@@ -12,7 +12,6 @@
 }
 
 
-
 .ant-card {
     width: 100%;
     max-width: 800px; 
@@ -24,12 +23,11 @@
 
 
 button[type="primary"] {
-    background-color: #1890ff;
-    border-color: #1890ff;
+    background-color: #0f4c75;
+    border-color: #0f4c75;
     display: inline-block;
     transition: background-color 0.3s, border-color 0.3s;
 }
-
 
 
 .vantagens-grid-container {
@@ -38,7 +36,7 @@ button[type="primary"] {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    gap: 20px; /* Adiciona um espaçamento entre os elementos */
+    gap: 20px; 
 }
 
 .vantagem-card {

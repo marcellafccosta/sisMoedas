@@ -403,9 +403,20 @@ const Perfil = () => {
                 </div>
             );
         } else {
-            return <p style={{ marginTop: '20px' }}>Não há vantagens cadastradas</p>;
+            return (
+                <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                    <p>Não há vantagens cadastradas</p>
+                    <Button
+                        type="primary"
+                        style={{ marginTop: '10px' }}
+                        onClick={() => window.location.href = '/cadastroVantagem'}
+                    >
+                        Adicionar Vantagem
+                    </Button>
+                </div>
+            );
         }
-    };
+    }       
 
 
 
