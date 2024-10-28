@@ -1,5 +1,6 @@
 import { prismaClient } from "../database/prismaClient.js";
-
+const SALT_ROUNDS = 10;
+import bcrypt from 'bcrypt';
 export class EmpresaParceiraService {
     // Busca todas as empresas parceiras
     async getAll() {
@@ -64,7 +65,7 @@ async getById(id) {
             if (!empresaData.usuario || !empresaData.usuario.nome || !empresaData.usuario.email || !empresaData.usuario.senha) {
                 throw new Error("Dados de usuário incompletos para o cadastro da empresa parceira.");
             }
-
+            const senhaCriptografada = await bcrypt.hash(empresaData.usuario.senha, SALT_ROUNDS);
 
             const empresa = await prismaClient.empresaparceira.create({
                 data: {
@@ -73,7 +74,7 @@ async getById(id) {
                         create: {
                             nome: empresaData.usuario.nome,
                             email: empresaData.usuario.email,
-                            senha: empresaData.usuario.senha,
+                            senha:senhaCriptografada,
                         },
                     },
 

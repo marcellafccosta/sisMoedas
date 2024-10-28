@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Upload, message, InputNumber, Select, Typography } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom'; // Importa o useNavigate
-import AppHeader from '../components/Header'; // Importando o AppHeader
+import { useNavigate } from 'react-router-dom';
+import AppHeader from '../components/Header';
 import "../styles/CadastroVantagem.css"; 
 
 const { Option } = Select;
@@ -11,43 +11,32 @@ const { Title } = Typography;
 const CadastroVantagem = () => {
   const [form] = Form.useForm();
   const [file, setFile] = useState(null);
-  const [empresas, setEmpresas] = useState([]);
-  const navigate = useNavigate(); // Inicializa o navigate
+  const navigate = useNavigate();
+  const [empresaLogada, setEmpresaLogada] = useState(null); // Estado para armazenar a empresa logada
 
   useEffect(() => {
-    const fetchEmpresas = async () => {
-      try {
-        const response = await fetch('http://localhost:3000/api/empresaparceira');
-        const data = await response.json();
-        setEmpresas(data);
-      } catch (error) {
-        console.error('Erro ao carregar empresas:', error);
-      }
-    };
-
-    fetchEmpresas();
+    // Obtenha o ID da empresa logada do localStorage e defina o estado
+    const idEmpresa = localStorage.getItem('idempresa');
+    if (idEmpresa) {
+      setEmpresaLogada(idEmpresa); // Define o ID da empresa logada no estado
+    } else {
+      console.warn("ID da empresa não encontrado no localStorage");
+    }
   }, []);
 
   // Manipula o upload do arquivo e armazena no estado
   const handleUpload = (file) => {
-    setFile(file); // Armazena o arquivo selecionado no estado
-    return false; // Impede o upload automático
+    setFile(file); 
+    return false;
   };
 
   // Envia o formulário
   const onFinish = async (values) => {
     const formData = new FormData();
-    formData.append('foto', file); // 'foto' deve ter o arquivo correto
+    formData.append('foto', file); 
     formData.append('customoedas', values.customoedas);
     formData.append('descricao', values.descricao);
-    formData.append('empresaparceira_id', values.empresaparceira);
-
-    console.log('Dados enviados:', {
-      foto: file,
-      customoedas: values.customoedas,
-      descricao: values.descricao,
-      empresaparceira_id: values.empresaparceira,
-    });
+    formData.append('empresaparceira_id', empresaLogada); // Usa o ID da empresa logada
 
     try {
       const response = await fetch('http://localhost:3000/api/vantagem', {
@@ -57,9 +46,9 @@ const CadastroVantagem = () => {
 
       if (response.ok) {
         message.success('Vantagem cadastrada com sucesso!');
-        form.resetFields(); // Limpa o formulário
-        setFile(null); // Reseta o estado do arquivo
-        navigate('/vantagens'); // Redireciona para a página de vantagens
+        form.resetFields();
+        setFile(null); 
+        navigate('/vantagens');
       } else {
         message.error('Erro ao cadastrar vantagem.');
       }
@@ -80,19 +69,20 @@ const CadastroVantagem = () => {
           onFinish={onFinish}
           style={{ width: "60vw", margin: 'auto', padding: '20px', backgroundColor: '#f7f7f7', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)' }}
         >
-          <Form.Item
-            name="empresaparceira"
-            label="Empresa Parceira"
-            rules={[{ required: true, message: 'Por favor, selecione uma empresa.' }]}
-          >
-            <Select placeholder="Selecione uma empresa" style={{ width: '100%' }}>
-              {empresas.map((empresa) => (
-                <Option key={empresa.idempresa} value={empresa.idempresa}>
-                  {empresa.nome}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
+          {empresaLogada ? (
+            <Form.Item
+              name="empresaparceira"
+              label="Empresa Parceira"
+              initialValue={empresaLogada} // Define o valor inicial como a empresa logada
+              rules={[{ required: true, message: 'Por favor, selecione uma empresa.' }]}
+            >
+              <Select placeholder="Selecione uma empresa" disabled style={{ width: '100%' }}>
+                <Option value={empresaLogada}>{empresaLogada}</Option>
+              </Select>
+            </Form.Item>
+          ) : (
+            <p>Carregando ID da empresa...</p> // Exibe uma mensagem de carregamento
+          )}
 
           <Form.Item
             name="customoedas"
@@ -123,7 +113,7 @@ const CadastroVantagem = () => {
             <Upload
               customRequest={({ file, onSuccess }) => {
                 handleUpload(file);
-                onSuccess(); // Chame onSuccess assim que o arquivo for tratado
+                onSuccess(); 
               }}
               maxCount={1}
             >
