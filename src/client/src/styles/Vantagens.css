@@ -1,47 +1,125 @@
-*{
-    overflow-y: auto;
-    margin: 0;
+/* Reset básico */
+* {
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+/* Container principal */
 .vantagens-container {
-    padding: 2rem;
-    background-color: #f5f5f5; 
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
- 
-  }
-  
+  padding: 2rem;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  width: 100vw;
+  margin: 0 auto;
+  min-height: 100vh;
+  max-height: 100vh; 
+}
+
+/* Botão de cadastro */
+.cadastro-button {
+  background-color: #04448B;
+  border-radius: 8px;
+  color: white;
+  padding: 10px 30px;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+.cadastro-button:hover {
+  background-color: #045BA0;
+  transform: translateY(-2px);
+}
+
+/* Cartão de vantagem */
+.vantagem-card {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.vantagem-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Imagem da vantagem */
+.vantagem-image-container {
+  overflow: hidden;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.vantagem-image {
+  height: 200px;
+  width: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.vantagem-card:hover .vantagem-image {
+  transform: scale(1.05);
+}
+
+/* Detalhes da vantagem */
+.vantagem-details {
+  padding: 1rem;
+  text-align: center;
+}
+
+.vantagem-description {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.vantagem-details p {
+  color: #777;
+  font-size: 0.9rem;
+}
+
+/* Paginação */
+.pagination {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.ant-pagination-item-active {
+  background-color: #04448B !important;
+  border-color: #04448B !important;
+}
+
+.ant-pagination-item a {
+  color: #04448B;
+}
+
+.ant-pagination-item-active a {
+  color: white;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
   .cadastro-button {
-    background-color: #04448B;
-    border-radius: 8px;
-    color: white;
-    padding: 10px 30px;
-    font-size: 14px;
-    transition: background-color 0.3s; 
+      font-size: 12px;
+      padding: 8px 20px;
   }
-  
-  .cadastro-button:hover {
-    background-color: #045BA0; 
-  }
-  
-  .vantagem-card {
-    border: 2px solid rgba(128, 128, 128, 0.5);
-  }
-  
-  
-  .vantagem-image-container {
-    overflow: hidden; 
-  }
-  
+
   .vantagem-image {
-    height: 200px;
-    width: 100%;
-    object-fit: cover;
-    margin-top: 1vw;
+      height: 150px;
   }
-  
-  
-  .pagination {
-    margin-top: 2rem; 
+
+  .vantagem-description {
+      font-size: 1rem;
   }
-  
+
+  .vantagem-details p {
+      font-size: 0.85rem;
+  }
+}
