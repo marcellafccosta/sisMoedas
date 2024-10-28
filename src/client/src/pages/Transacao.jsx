@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { message } from 'antd'; // Import message from Ant Design
-import '../styles/Transacao.css'; // Import your CSS file
-import { useParams, Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { message } from 'antd'; 
+import '../styles/Transacao.css'; 
+import { useParams, Link, useNavigate } from 'react-router-dom'; 
+import AppHeader from '../components/Header';
+import { ArrowLeftOutlined } from '@ant-design/icons';
+
 
 const Transacao = () => {
-  const { idUsuario } = useParams(); // Captura o ID do usuário da URL
+  const { idUsuario } = useParams(); 
   const [usuarios, setUsuarios] = useState({});
   const [alunos, setAlunos] = useState([]);
   const [formData, setFormData] = useState({
@@ -16,12 +19,11 @@ const Transacao = () => {
   const [saldoProfessor, setSaldoProfessor] = useState(0);
   const [mensagem, setMensagem] = useState('');
 
-  const professorIdFixo = idUsuario; // Define uma constante para o ID do professor
-  const [messageApi, contextHolder] = message.useMessage(); // Initialize message API
-  const navigate = useNavigate(); // Use useNavigate for redirection
+  const professorIdFixo = idUsuario; 
+  const [messageApi, contextHolder] = message.useMessage(); 
+  const navigate = useNavigate(); 
 
   useEffect(() => {
-    // Verifica se o idUsuario está disponível
     if (!professorIdFixo) {
       setMensagem('ID de usuário não encontrado.');
       return;
@@ -56,7 +58,7 @@ const Transacao = () => {
 
     fetchAlunos();
     fetchSaldoProfessor();
-  }, [professorIdFixo]); // Adiciona professorIdFixo como dependência
+  }, [professorIdFixo]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -120,7 +122,7 @@ const Transacao = () => {
       setFormData({ usuarioId: '', quantidade: 0, motivo: '' });
 
       // Redirecionar para a página de extrato usando navigate
-      navigate('/extrato');
+      navigate(`/extrato/${idUsuario}`);
 
     } catch (error) {
       console.error('Erro ao realizar a transação:', error);
@@ -129,9 +131,12 @@ const Transacao = () => {
   };
 
   return (
-    <div className="transacao">
-      {contextHolder} {/* Ensure this is here */}
+    <><AppHeader /><div className="transacao">
+      {contextHolder} 
       <div className="transacao-form">
+      <div className="back-button" onClick={() => navigate(`/extrato/${idUsuario}`)}>
+            <ArrowLeftOutlined />
+          </div>
         <h1 className="transacao-title">Realizar Transação</h1>
         <form onSubmit={realizarTransacao}>
           <label htmlFor="usuarioId">Para qual usuário?</label>
@@ -161,8 +166,7 @@ const Transacao = () => {
             onChange={handleInputChange}
             inputMode="numeric"
             pattern="[0-9]*"
-            required
-          />
+            required />
 
           <label htmlFor="motivo">Motivo:</label>
           <textarea
@@ -170,8 +174,7 @@ const Transacao = () => {
             value={formData.motivo}
             onChange={handleInputChange}
             rows="4"
-            required
-          />
+            required />
 
           <button type="submit" className="ant-btn custom-button">Enviar Moedas</button>
         </form>
@@ -179,7 +182,7 @@ const Transacao = () => {
         {mensagem && <p className="mensagem">{mensagem}</p>}
         <p>Saldo disponível: {saldoProfessor} moedas</p>
       </div>
-    </div>
+    </div></>
   );
 };
 

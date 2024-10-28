@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -15,7 +15,7 @@ model usuario {
   aluno            aluno[]         
   professor        professor[]      
   empresa          empresaparceira[]
-  transacoes       transacao[]      // Relacionamento com transacao
+  transacoes       transacao[]      
 }
 
 model aluno {

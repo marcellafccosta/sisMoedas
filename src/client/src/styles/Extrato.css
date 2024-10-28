@@ -1,33 +1,81 @@
 .extrato-container {
     display: flex;
-    flex-direction: column;
-    align-items: center; /* Centraliza horizontalmente */
-    justify-content: center; /* Centraliza verticalmente */
-    height: 100vh; /* Ocupe 100% da altura da janela */
-    background-color: #f4f4f4; /* Cor de fundo suave */
-    padding: 20px; /* Espaçamento ao redor */
+    justify-content: center;
+    align-items: flex-start; 
+    min-height: 100vh;
+    width: 100vw;
+    height: fit-content;
+    max-height: 100vh; 
+    padding: 20px;
+    background-color: #f0f2f5;
+    overflow-y: auto; 
 }
 
-h1 {
-    margin-bottom: 20px; /* Espaço abaixo do título */
+
+.extrato-card {
+    width: 100%;
+    max-width: 800px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.transacoes-descriptions {
+    background-color: #fafafa;
+    padding: 20px;
+    border-radius: 8px;    
 }
 
 .transacoes-table {
-    width: 100%; /* Ocupe toda a largura disponível */
-    border-collapse: collapse; /* Remove espaços entre bordas de células */
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
 }
 
 .transacoes-table th, .transacoes-table td {
-    border: 1px solid #ccc; /* Borda das células */
-    padding: 12px; /* Espaçamento interno das células */
-    text-align: left; /* Alinhamento à esquerda do texto */
+    border: 1px solid #ccc;
+    padding: 12px;
+    text-align: left;
 }
 
 .transacoes-table th {
-    background-color: #007BFF; /* Cor de fundo do cabeçalho */
-    color: white; /* Cor do texto do cabeçalho */
+    background-color: #007BFF;
+    color: white;
 }
 
 .transacoes-table tr:nth-child(even) {
-    background-color: #f9f9f9; /* Cor de fundo para linhas pares */
+    background-color: #f9f9f9;
+}
+
+
+
+.saldo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.saldo p {
+    font-size: 18px;
+    font-weight: bold;
+    color: #0f4c75; /* Verde para o texto */
+    border: 2px solid #0f4c75; /* Borda verde para destaque */
+    padding: 10px 20px;
+    border-radius: 8px;
+    display: inline-block;
+    text-align: center;
+}
+
+.button-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.transacoes-table {
+    margin-top: 20px;
 }

@@ -1,26 +1,24 @@
 /* Transacao.css */
-body {
-    background: linear-gradient(135deg, #3282b8, #0f4c75);
-}
 
 .transacao {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9; /* Keep original background for the form */
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
-    align-items: center;
-    width: 100%; /* Ensures it occupies the full width of the screen */
-    height: 100%; /* Ensures it occupies the full height of the screen */
+    align-items: flex-start; 
+    min-height: 100vh;
+    width: 100vw;
+    height: fit-content;
+    max-height: 100vh; 
+    padding: 20px;
+    background-color: #f0f2f5;
+    overflow-y: auto; 
+
 }
 
-h1 {
+h1, .transacao-title {
     text-align: center;
-    color: #0f4c75; /* Changed color to new scheme */
+    color: #0f4c75;
+    font-size: 2rem;
+    overflow-y: hidden;
 }
 
 form {
@@ -31,113 +29,79 @@ form {
 label {
     margin-bottom: 5px;
     font-weight: bold;
-    color: #0f4c75; /* Changed color to new scheme */
+    color: #0f4c75;
 }
 
-select {
-    width: 100%; /* Define uma largura fixa para o select */
-    max-width: 100%; /* Garante que não ultrapasse a largura do contêiner */
+select, input, textarea {
+    width: 100%;
+    max-width: 100%;
     margin-bottom: 15px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
+    background-color: #f9f9f9;
+    color: #686565;
 }
 
-select:focus {
-    border-color: #3282b8; /* Changed focus color to new scheme */
-    outline: none;
-}
-
-input {
-    margin-bottom: 15px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-}
-
-input:focus {
-    border-color: #3282b8; /* Changed focus color to new scheme */
+select:focus, input:focus, textarea:focus {
+    border-color: #3282b8;
     outline: none;
 }
 
 textarea {
-    margin-bottom: 15px; /* Espaçamento inferior do textarea */
-    padding: 10px; /* Padding interno */
-    border: 1px solid #ccc; /* Borda do textarea */
-    border-radius: 5px; /* Borda arredondada */
-    font-size: 16px; /* Tamanho da fonte */
-    resize: none; /* Impede o redimensionamento pelo usuário */
-    rows: 4; /* Altura inicial do textarea */
-}
-/* Adicione isso ao seu arquivo Transacao.css */
-/* Adicione isso ao seu arquivo Transacao.css */
-
-.custom-button {
-    background-color: #0f4c75; /* Cor de fundo padrão */
-    border-color: #0f4c75; /* Cor da borda padrão */
-    color: white; /* Cor do texto padrão */
-    transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s; /* Adiciona transição suave para box-shadow */
+    resize: none;
+    height: auto;
+    min-height: 80px;
 }
 
-.custom-button:hover {
-    background-color: #0f4c75; /* Cor de fundo ao passar o mouse */
-    border-color: #0f4c75; /* Cor da borda ao passar o mouse */
-}
-
-.custom-button:focus {
-    outline: none; /* Remove o contorno padrão ao focar */
-    box-shadow: 0 0 5px rgba(0, 100, 255, 0.5); /* Sombreamento ao focar */
-}
-
-.custom-button:active {
-    background-color: #0f4c75; /* Cor de fundo quando clicado */
-    border-color: #0f4c75; /* Cor da borda quando clicado */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Adiciona sombra ao clicar */
-}
-
-
-
-button {
+.custom-button, button {
+    background-color: #0f4c75;
+    border-color: #0f4c75;
+    color: white;
     padding: 10px;
-    border: none;
     border-radius: 5px;
     font-size: 16px;
-    color: white; 
-    background-color: #0f4c75; /* Cor de fundo padrão */
-    border-color: #0f4c75;
+    transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
 
-p {
-    text-align: center;
-    color: #333; /* Keep original color */
+.custom-button:hover, button:hover {
+    background-color: #0e496d;
 }
 
-.mensagem {
+.custom-button:focus, button:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 100, 255, 0.5);
+}
+
+.custom-button:active, button:active {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+p, .mensagem {
     text-align: center;
-    font-size: 1rem;
-    color: #0f4c75; /* Changed color to new scheme */
+    color: #333;
 }
 
 .transacao-form {
-    background: #fff; /* Keep original form background */
+    background: #fff;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 100%;
     max-width: 400px;
+    
 }
 
-.transacao-title {
-    text-align: center;
-    font-size: 1.8rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #0f4c75; /* Changed color to new scheme */
+.back-button {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: #0f4c75;
 }
 
-
-
-
+.back-button:hover {
+    color: #3282b8;
+}
 

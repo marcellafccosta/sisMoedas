@@ -1,7 +1,7 @@
 import React from 'react';
 import { Layout, Menu, Button } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import "../styles/Header.css";
 import logo from "../assets/LogoSisMoeda.svg";
 
@@ -17,31 +17,10 @@ const AppHeader = () => {
     };
 
     const menuItems = [
-        {
-            key: '1',
-            label: 'Home',
-            onClick: () => handleMenuClick('/'),
-        },
-        {
-            key: '2',
-            label: 'Login',
-            onClick: () => handleMenuClick('/login'),
-        },
-        {
-            key: '3',
-            label: 'Cadastro',
-            onClick: () => handleMenuClick('/cadastro'),
-        },
-        {
-            key: '4',
-            label: 'Extrato',
-            onClick: () => handleMenuClick('/extrato'),
-        },
-        {
-            key: '5',
-            label: 'Vantagens',
-            onClick: () => handleMenuClick('/vantagens'),
-        },
+        { key: 'home', label: <Link to="/">Home</Link> },
+        { key: 'extrato', label: <Link to={`/extrato/${idUsuario || 1}`}>Extrato</Link> }, // Usando idUsuario
+        { key: 'vantagens', label: <Link to="/vantagens">Vantagens</Link> },
+        { key: 'cadastroVantagem', label: <Link to="/cadastroVantagem">Cadastro de Vantagem</Link> },
     ];
 
     const handlePerfilClick = () => {
