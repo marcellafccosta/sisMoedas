@@ -1,88 +1,75 @@
 import React from 'react';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import { Link, Routes, Route } from 'react-router-dom';
-import Perfil from '../pages/Perfil.jsx';
-import Home from '../pages/Home.jsx';
-import Extrato from '../pages/Extrato.jsx';
-import Transacao from '../pages/Transacao.jsx';
-import Vantagens from '../pages/Vantagens.jsx';
-import CadastroVantagem from '../pages/CadastroVantagem.jsx';
-import VantagemDetalhe from '../pages/VantagemDetalhe.jsx';
-import logo from '../assets/LogoSisMoeda.svg'; // Certifique-se de usar o caminho e extensão corretos
+import { Layout, Menu, Button } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
+import "../styles/Header.css";
+import logo from "../assets/LogoSisMoeda.svg";
 
-const { Header, Content, Footer } = Layout;
-
-const items = [
-  { key: 'home', label: <Link to="/">Home</Link> },
-  { key: 'perfil', label: <Link to="/perfil/1">Perfil</Link> }, // Exemplo de idUsuario
-  { key: 'extrato', label: <Link to="/extrato/1">Extrato</Link> }, // Exemplo de idUsuario
-  { key: 'vantagens', label: <Link to="/vantagens">Vantagens</Link> },
-  { key: 'cadastroVantagem', label: <Link to="/cadastroVantagem">Cadastro de Vantagem</Link> },
-];
+const { Header } = Layout;
 
 const AppHeader = () => {
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
+    const navigate = useNavigate();
 
-  return (
-    <Layout style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Header
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
-        <img src={logo} alt="Logo" style={{ height: '40px', marginRight: '16px' }} />
-        <Menu
-          theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={['home']}
-          items={items}
-          style={{
-            flex: 1,
-            minWidth: 0,
-          }}
-        />
-      </Header>
-      <Content>
-        <Breadcrumb
-          style={{
-            margin: '16px 0',
-          }}
-        >
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>List</Breadcrumb.Item>
-          <Breadcrumb.Item>App</Breadcrumb.Item>
-        </Breadcrumb>
-        <div
-          style={{
-            minHeight: 'calc(100vh - 200px)', // Ajuste baseado no seu layout
-            padding: 24,
-            borderRadius: borderRadiusLG,
-            background: colorBgContainer,
-          }}
-        >
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/perfil/:idUsuario" element={<Perfil />} />
-            <Route path="/extrato/:idUsuario" element={<Extrato />} />
-            <Route path="/transacao/:idUsuario" element={<Transacao />} />
-            <Route path="/vantagens" element={<Vantagens />} />
-            <Route path="/cadastroVantagem" element={<CadastroVantagem />} />
-            <Route path="/VantagemDetalhe/:id" element={<VantagemDetalhe />} />
-          </Routes>
-        </div>
-      </Content>
-      <Footer
-        style={{
-          textAlign: 'center',
-        }}
-      >
-        Ant Design ©{new Date().getFullYear()} Created by Ant UED
-      </Footer>
-    </Layout>
-  );
+    // Obtém o ID do usuário logado do localStorage
+    const idUsuario = localStorage.getItem('idusuario');
+
+    const handleMenuClick = (path) => {
+        navigate(path);
+    };
+
+    const menuItems = [
+        {
+            key: '1',
+            label: 'Home',
+            onClick: () => handleMenuClick('/'),
+        },
+        {
+            key: '2',
+            label: 'Login',
+            onClick: () => handleMenuClick('/login'),
+        },
+        {
+            key: '3',
+            label: 'Cadastro',
+            onClick: () => handleMenuClick('/cadastro'),
+        },
+        {
+            key: '4',
+            label: 'Extrato',
+            onClick: () => handleMenuClick('/extrato'),
+        },
+        {
+            key: '5',
+            label: 'Vantagens',
+            onClick: () => handleMenuClick('/vantagens'),
+        },
+    ];
+
+    const handlePerfilClick = () => {
+        if (idUsuario) {
+            navigate(`/perfil/${idUsuario}`);
+        } else {
+            navigate('/login'); // Redireciona para login caso não haja usuário logado
+        }
+    };
+
+    const handleLogoClick = () => {
+        navigate(`/`);
+    };
+
+    return (
+        <Header className="app-header">
+            <div className="container">
+                <div className="logo">
+                    <img onClick={handleLogoClick} src={logo} alt="Logo SisMoeda" className="logo-image" />
+                </div>
+                <Menu mode="horizontal" items={menuItems} className="menu-desktop" />
+                <div className="user-actions">
+                    <Button type="primary" icon={<UserOutlined />} onClick={handlePerfilClick} />
+                </div>
+            </div>
+        </Header>
+    );
 };
 
 export default AppHeader;
