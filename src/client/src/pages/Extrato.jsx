@@ -1,85 +1,73 @@
-import React, { useState, useEffect } from "react";
-import { Table, Card, Row, Col, Button } from 'antd';
-import "../styles/Extrato.css";
-import { useNavigate } from 'react-router-dom';
-import AppHeader from "../components/Header";
+import React, { useEffect, useState } from "react";
+import { Descriptions, Card, Button } from 'antd';
+import { useParams, Link } from 'react-router-dom';
+
 const Extrato = () => {
-    const navigate = useNavigate();
-    const [transacoes, setTransacoes] = useState([]);
-    const [saldo, setSaldo] = useState(0);
+    const { idUsuario } = useParams(); // Captura o ID do usuário da URL
+    console.log("ID do Usuário:", idUsuario); // Verifica se o ID é capturado corretamente
+    const [transacoes, setTransacoes] = useState([]); // Estado para armazenar as transações
+    const [loading, setLoading] = useState(true); // Estado de carregamento
+    const [error, setError] = useState(null); // Estado para erros
 
     useEffect(() => {
-        const transacoesMock = [
-            { key: '1', tipo: 'Crédito', quantidade: 50, data: '2024-10-20', descricao: 'Recebimento de Moedas' },
-            { key: '2', tipo: 'Débito', quantidade: 20, data: '2024-10-22', descricao: 'Troca por Recompensa' },
-            { key: '3', tipo: 'Débito', quantidade: 10, data: '2024-10-23', descricao: 'Envio de Moedas' },
-        ];
-        setTransacoes(transacoesMock);
+        const fetchTransacoes = async () => {
+            if (!idUsuario) {
+                setError('ID do usuário não fornecido.');
+                setLoading(false);
+                return;
+            }
+            console.log("Buscando transações para ID:", idUsuario);
+            try {
+                const response = await fetch(`http://localhost:3000/api/transacao/usuario/${idUsuario}`);
+                if (!response.ok) {
+                    throw new Error('Erro ao buscar transações');
+                }
+                const data = await response.json();
+                setTransacoes(data); // Armazena as transações no estado
+            } catch (err) {
+                setError(err.message); // Armazena mensagem de erro
+            } finally {
+                setLoading(false); // Atualiza estado de carregamento
+            }
+        };
 
-        const saldoAtual = transacoesMock.reduce((acc, transacao) => {
-            return transacao.tipo === 'Crédito' ? acc + transacao.quantidade : acc - transacao.quantidade;
-        }, 0);
+        fetchTransacoes(); // Chama a função para buscar transações
+    }, [idUsuario]); // Re-executa o efeito se o ID mudar
 
-        setSaldo(saldoAtual);
-    }, []);
+    // Renderiza o componente
+    if (loading) {
+        return <div>Carregando...</div>; // Mensagem de carregamento
+    }
 
-    const columns = [
-        {
-            title: 'Descrição',
-            dataIndex: 'descricao',
-            key: 'descricao',
-        },
-        {
-            title: 'Tipo',
-            dataIndex: 'tipo',
-            key: 'tipo',
-        },
-        {
-            title: 'Quantidade',
-            dataIndex: 'quantidade',
-            key: 'quantidade',
-            render: (text) => `${text} moedas`,
-        },
-        {
-            title: 'Data',
-            dataIndex: 'data',
-            key: 'data',
-        },
-    ];
-
-
-    const handleEnviarMoedas = () => {
-        navigate('/');
-    };
-
-    const handleVerVantagens = () => {
-        navigate('/');
-    };
+    if (error) {
+        return <div>Erro: {error}</div>; // Mensagem de erro
+    }
 
     return (
-        <><AppHeader />
         <div className="extrato-container">
-            <Row gutter={[16, 16]}>
-                <Col span={24}>
-                    <Card className="saldo-card" title="Saldo Atual" bordered={false}>
-                        <h2>{saldo} Moedas</h2>
-                    </Card>
-                </Col>
-                <Col span={24}>
-                    <Card title="Extrato de Transações" bordered={false}>
-                        <Table columns={columns} dataSource={transacoes} pagination={false} />
-                    </Card>
-                </Col>
-                <Col span={24} className="button-group">
-                    <Button type="primary" onClick={handleEnviarMoedas} style={{ marginRight: '10px' }}>
-                        Enviar Moedas
+            <Card title={`Extrato do Usuário ${idUsuario}`} bordered>
+                <Link to={`/transacao/${idUsuario}`}>
+                    <Button type="primary" style={{ marginBottom: '20px' }}>
+                        Realizar Transação
                     </Button>
-                    <Button type="default" onClick={handleVerVantagens}>
-                        Ver Vantagens
-                    </Button>
-                </Col>
-            </Row>
-        </div></>
+                </Link>
+                <Descriptions bordered column={1}>
+                    {transacoes.length === 0 ? (
+                        <Descriptions.Item label="Transações">Nenhuma transação encontrada.</Descriptions.Item>
+                    ) : (
+                        transacoes.map(transacao => (
+                            <Descriptions.Item key={transacao.idtransacao} label={`Transação ID: ${transacao.idtransacao}`}>
+                                <p><strong>Tipo:</strong> {transacao.tipo}</p>
+                                <p><strong>Quantidade:</strong> {transacao.quantidade}</p>
+                                <p><strong>Data:</strong> {new Date(transacao.data).toLocaleString()}</p>
+                                <p><strong>Motivo:</strong> {transacao.motivo}</p>
+                                <hr />
+                            </Descriptions.Item>
+                        ))
+                    )}
+                </Descriptions>
+            </Card>
+        </div>
     );
 };
 

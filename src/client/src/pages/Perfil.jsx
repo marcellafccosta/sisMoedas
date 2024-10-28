@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Descriptions, Button, Input, message, Card, Modal } from 'antd';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { useParams, Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import AppHeader from "../components/Header";
 import "../styles/Perfil.css";
 import { Typography, Grid } from "@mui/material";
+import { useNavigate } from 'react-router-dom';
 
 const Perfil = () => {
     const [profileData, setProfileData] = useState(null);
@@ -422,74 +422,68 @@ const Perfil = () => {
 
 
     return (
-        <>
-            <AppHeader />
-            <div className="profile-container">
-                <Card
-                    title="Perfil do Usuário"
-                    bordered
-                    style={{ width: '100%', maxWidth: '800px', height: 'fit-content' }} 
-                    extra={
-                        isEditing ? (
-                            <>
-                                <Button type="primary" onClick={handleSave}>Salvar</Button>
-                                <Button style={{ marginLeft: '10px' }} onClick={() => setIsEditing(false)}>Cancelar</Button>
-                            </>
-                        ) : (
-                            <><Button type="primary" onClick={handleEdit}>Editar</Button>
-                                <Button type="danger" style={{ marginLeft: '10px', backgroundColor: "#a22020", color: "white" }} onClick={handleDeleteAccount}>Deletar Conta</Button></>
-                        )
-                    }
-                >
-                    {profileData ? (
-                        <>
-                            <Descriptions bordered column={2}>
-                                <Descriptions.Item label="Nome">
-                                    {isEditing ? (
-                                        <Input name="nome" value={userData.nome || ''} onChange={handleInputChange} />
+        <><AppHeader /><div className="profile-container">
+            <Card
+                title="Perfil do Usuário"
+                bordered
+                style={{ width: '100%', maxWidth: '800px', height: 'fit-content' }} // Ajuste aqui para garantir que o Card também se ajuste ao conteúdo
+                extra={isEditing ? (
+                    <>
+                        <Button type="primary" onClick={handleSave}>Salvar</Button>
+                        <Button style={{ marginLeft: '10px' }} onClick={() => setIsEditing(false)}>Cancelar</Button>
+                    </>
+                ) : (
+                    <><Button type="primary" onClick={handleEdit}>Editar</Button>
+                        <Button type="danger" style={{ marginLeft: '10px', backgroundColor: "#a22020", color: "white" }} onClick={handleDeleteAccount}>Deletar Conta</Button></>
+                )}
+            >
+                {profileData ? (
+                    <>
+                        <Descriptions bordered column={2}>
+                            <Descriptions.Item label="Nome">
+                                {isEditing ? (
+                                    <Input name="nome" value={userData.nome || ''} onChange={handleInputChange} />
+                                ) : (
+                                    profileData.nome
+                                )}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="E-mail">
+                                {isEditing ? (
+                                    <Input name="email" value={userData.email || ''} onChange={handleInputChange} />
+                                ) : (
+                                    profileData.email
+                                )}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Senha">
+                                {showPassword ? (
+                                    isEditing ? (
+                                        <Input.Password name="senha" value={userData.senha || ''} onChange={handleInputChange} />
                                     ) : (
-                                        profileData.nome
-                                    )}
-                                </Descriptions.Item>
-                                <Descriptions.Item label="E-mail">
-                                    {isEditing ? (
-                                        <Input name="email" value={userData.email || ''} onChange={handleInputChange} />
-                                    ) : (
-                                        profileData.email
-                                    )}
-                                </Descriptions.Item>
-                                <Descriptions.Item label="Senha">
-                                    {showPassword ? (
-                                        isEditing ? (
-                                            <Input.Password name="senha" value={userData.senha || ''} onChange={handleInputChange} />
-                                        ) : (
-                                            profileData.senha
-                                        )
-                                    ) : (
-                                        '******'
-                                    )}
-                                    <Button
-                                        type="link"
-                                        onClick={togglePasswordVisibility}
-                                        icon={showPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
-                                        style={{ marginLeft: 10 }}
-                                    />
-                                </Descriptions.Item>
-                                {renderSpecificData()}
-                            </Descriptions>
-                            {profileData?.empresa?.length > 0 && (
-                                <div>
-                                    <h2 className="vantagens">Vantagens</h2>
-                                    {renderVantagensGrid(profileData.empresa[0])}
-                                </div>
-                            )}
-                        </>
-                    ) : (
-                        <p>Carregando dados do perfil...</p>
-                    )}
-                </Card>
-            </div>
-        </>
+                                        profileData.senha
+                                    )
+                                ) : (
+                                    '******'
+                                )}
+                                <Button
+                                    type="link"
+                                    onClick={togglePasswordVisibility}
+                                    icon={showPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+                                    style={{ marginLeft: 10 }} />
+                            </Descriptions.Item>
+                            {renderSpecificData()}
+                        </Descriptions>
+                        {profileData?.empresa?.length > 0 && (
+                            <div>
+                                <h2 className="vantagens">Vantagens</h2>
+                                {renderVantagensGrid(profileData.empresa[0])}
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    <p>Carregando dados do perfil...</p>
+                )}
+            </Card>
+        </div></>
     );
 };
 

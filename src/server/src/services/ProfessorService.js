@@ -40,15 +40,13 @@ export class ProfessorService {
                 throw new Error("Dados de usuário incompletos para o cadastro do professor.");
             }
     
+            const senhaCriptografada = await bcrypt.hash(professorData.usuario.senha, SALT_ROUNDS);
+            
             // Criptografando a senha antes de salvar no banco de dados
-            const senhaCriptografada = await bcrypt.hash(professorData.usuario.senha, SALT_ROUNDS);
-    
-            // Criando o professor com os dados estruturados corretamente
             const professor = await prismaClient.professor.create({
                 data: {
                     cpf: professorData.cpf,
                     departamento: professorData.departamento,
-                    saldomoedas: professorData.saldomoedas || 0,
                     usuario: {
                         create: {
                             nome: professorData.usuario.nome,
@@ -58,7 +56,7 @@ export class ProfessorService {
                     },
                     instituicao: {
                         connect: {
-                            idinstituicao: parseInt(professorData.instituicao_id, 10)  // Convertendo para inteiro, se necessário
+                            idinstituicao: parseInt(professorData.instituicao_id, 10)
                         }
                     }
                 },
@@ -67,62 +65,59 @@ export class ProfessorService {
                     instituicao: true
                 }
             });
-    
+
             console.log("Professor cadastrado com sucesso:", professor);
             return professor;
-    
         } catch (error) {
             console.error("Erro ao cadastrar professor: ", error.message);
             throw new Error("Erro ao cadastrar professor: " + error.message);
         }
     }
-    
-    
 
-    async updateProfessor(professorId, professorData) {
+    async updateProfessor(idprofessor, professorData) {
         try {
-            console.log('Dados para atualização:', {
-                id: parseInt(professorId),
-                cpf: professorData.cpf,
-                departamento: professorData.departamento,
-                saldomoedas: professorData.saldomoedas,
-                nomeUsuario: professorData.usuario?.nome,
-                emailUsuario: professorData.usuario?.email,
-                senhaUsuario: professorData.usuario?.senha,
-                instituicaoId: professorData.instituicao_id
+            const professorExistente = await prismaClient.professor.findUnique({
+                where: { idprofessor: parseInt(idprofessor) },
+                include: {
+                    usuario: true,
+                    instituicao: true
+                }
             });
-    
-            const updatedProfessor = await prismaClient.professor.update({
-                where: { idprofessor: parseInt(professorId) },
+
+            if (!professorExistente) {
+                throw new Error("Professor não encontrado");
+            }
+
+            const dadosAtualizados = {
+                cpf: professorData.cpf || professorExistente.cpf,
+                departamento: professorData.departamento || professorExistente.departamento,
+                saldomoedas: professorData.saldomoedas || professorExistente.saldomoedas
+            };
+
+            const professorAtualizado = await prismaClient.professor.update({
+                where: { idprofessor: parseInt(idprofessor) },
                 data: {
-                    cpf: professorData.cpf,
-                    departamento: professorData.departamento,
-                    saldomoedas: professorData.saldomoedas,
+                    ...dadosAtualizados,
                     usuario: professorData.usuario ? {
                         update: {
-                            nome: professorData.usuario.nome,
-                            email: professorData.usuario.email,
-                            senha: professorData.usuario.senha
+                            nome: professorData.usuario.nome || professorExistente.usuario.nome,
+                            email: professorData.usuario.email || professorExistente.usuario.email,
+                            senha: professorData.usuario.senha || professorExistente.usuario.senha
                         }
                     } : undefined,
                     instituicao: professorData.instituicao_id ? {
-                        connect: {
-                            idinstituicao: parseInt(professorData.instituicao_id, 10)
-                        },
-                    } : undefined,
+                        connect: { idinstituicao: parseInt(professorData.instituicao_id) }
+                    } : undefined
                 },
                 include: {
                     usuario: true,
                     instituicao: true
                 }
             });
-    
-            if (!updatedProfessor) {
-                throw new Error("Professor não encontrado");
-            }
-            return updatedProfessor;
+
+            return professorAtualizado;
         } catch (error) {
-            console.error('Erro ao atualizar professor:', error);
+            console.error("Erro ao atualizar professor: ", error.message);
             throw new Error("Erro ao atualizar professor: " + error.message);
         }
     }
@@ -145,17 +140,18 @@ export class ProfessorService {
 
             const deletedProfessor = await prismaClient.professor.delete({
                 where: { id: parseInt(id) }
-            })
+            });
 
             await prismaClient.usuario.delete({
                 where: { idusuario: professor.usuario_id }
-            })
+            });
 
             return deletedProfessor;
         } catch (error) {
+            console.error("Erro ao deletar professor: ", error.message);
             throw new Error("Erro ao deletar professor: " + error.message);
         }
     }
-
 }
+
 export default new ProfessorService();
