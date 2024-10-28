@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Descriptions, Button, Input, message, Card, Modal } from 'antd';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { useParams, Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import AppHeader from "../components/Header";
 import "../styles/Perfil.css";
 import { Typography, Grid } from "@mui/material";
@@ -402,8 +401,6 @@ const Perfil = () => {
 
 
     return (
-        <>
-            <AppHeader />
             <div className="profile-container">
                 <Card
                     title="Perfil do Usuário"
@@ -469,7 +466,6 @@ const Perfil = () => {
                     )}
                 </Card>
             </div>
-        </>
     );
 };
 

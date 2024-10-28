@@ -1,42 +1,33 @@
-Extrato.css
-
 .extrato-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    height: 100vh; 
-    margin: 0;
+    flex-direction: column;
+    align-items: center; /* Centraliza horizontalmente */
+    justify-content: center; /* Centraliza verticalmente */
+    height: 100vh; /* Ocupe 100% da altura da janela */
+    background-color: #f4f4f4; /* Cor de fundo suave */
+    padding: 20px; /* Espaçamento ao redor */
 }
 
-.saldo-card {
-    text-align: center;
-    background-color: #f0f2f5;
-    border: 1px solid #0f4c75;
-    width: 500px;
+h1 {
+    margin-bottom: 20px; /* Espaço abaixo do título */
 }
 
-.saldo-card h2 {
-    font-size: 2rem;
-    color: #0f4c75;
-    
+.transacoes-table {
+    width: 100%; /* Ocupe toda a largura disponível */
+    border-collapse: collapse; /* Remove espaços entre bordas de células */
 }
 
-.button-group {
-    text-align: center;
+.transacoes-table th, .transacoes-table td {
+    border: 1px solid #ccc; /* Borda das células */
+    padding: 12px; /* Espaçamento interno das células */
+    text-align: left; /* Alinhamento à esquerda do texto */
 }
 
-.button-group .ant-btn {
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
+.transacoes-table th {
+    background-color: #007BFF; /* Cor de fundo do cabeçalho */
+    color: white; /* Cor do texto do cabeçalho */
 }
 
-.button-group .ant-btn-primary {
-    background-color: #0f4c75;
-    border-color: #0f4c75;
-}
-
-.button-group .ant-btn-primary:hover {
-    background-color: #0f4c75;
-    border-color: #0f4c75;
+.transacoes-table tr:nth-child(even) {
+    background-color: #f9f9f9; /* Cor de fundo para linhas pares */
 }
