@@ -8,7 +8,7 @@ export class TransacaoService {
                 include: {
                     aluno: true,
                     professor: true,
-                    usuario: true // Inclui os dados do usuário relacionado
+                    usuario: true 
                 }
             });
             return transacoes;
@@ -42,24 +42,42 @@ export class TransacaoService {
     // Cria uma nova transação
     async createTransacao(transacaoData) {
         try {
-            const transacao = await prismaClient.transacao.create({
+            // Cria a transação para o professor com o tipo `EnvioMoedas`
+            const transacaoProfessor = await prismaClient.transacao.create({
                 data: {
-                    tipo: transacaoData.tipo,
+                    tipo: 'EnvioMoedas', // Define o tipo como EnvioMoedas para o professor
                     quantidade: transacaoData.quantidade,
                     data: transacaoData.data,
-                    aluno: transacaoData.aluno_id ? { connect: { idaluno: transacaoData.aluno_id } } : undefined,
-                    professor: transacaoData.professor_id ? { connect: { idprofessor: transacaoData.professor_id } } : undefined,
-                    usuario: transacaoData.usuario_id ? { connect: { idusuario: transacaoData.usuario_id } } : undefined, // Adiciona o relacionamento com usuário
+                    professor: { connect: { idprofessor: parseInt(transacaoData.professor_id) } },
+                    usuario: { connect: { idusuario: parseInt(transacaoData.usuario_id) } },
                     motivo: transacaoData.motivo
                 }
             });
-            return transacao;
+    
+            // Se um aluno está associado, cria uma transação complementar para ele
+            let transacaoAluno = null;
+            if (transacaoData.aluno_id) {
+                transacaoAluno = await prismaClient.transacao.create({
+                    data: {
+                        tipo: 'RecebimentoMoedas', // Define o tipo como RecebimentoMoedas para o aluno
+                        quantidade: transacaoData.quantidade,
+                        data: transacaoData.data,
+                        aluno: { connect: { idaluno: parseInt(transacaoData.aluno_id) } },
+                        usuario: { connect: { idusuario: parseInt(transacaoData.usuario_id) } }, // Conecte o campo usuario para o aluno
+                        motivo: transacaoData.motivo
+                    }
+                });
+            }
+    
+            // Retorna ambas as transações para confirmação
+            return { transacaoProfessor, transacaoAluno };
         } catch (error) {
             console.error("Erro ao cadastrar transação:", error.message);
             throw new Error("Erro ao cadastrar transação: " + error.message);
         }
     }
-
+    
+    
     // Atualiza uma transação existente
     async updateTransacao(id, transacaoData) {
         try {
@@ -94,25 +112,45 @@ export class TransacaoService {
             throw new Error("Erro ao deletar transação: " + error.message);
         }
     }
-
-    // Adiciona o método getByUsuarioId na classe TransacaoService
-async getByUsuarioId(usuarioId) {
-    try {
-        const transacoes = await prismaClient.transacao.findMany({
-            where: { usuario_id: parseInt(usuarioId) },
-            include: {
-                aluno: true,
-                professor: true,
-                usuario: true
+    async getByUsuarioId(usuarioId) {
+        try {
+            const userData = await prismaClient.usuario.findUnique({
+                where: { idusuario: parseInt(usuarioId) },
+                include: {
+                    aluno: true,
+                    professor: true
+                }
+            });
+    
+            if (!userData) {
+                throw new Error("Usuário não encontrado");
             }
-        });
-        return transacoes;
-    } catch (error) {
-        console.error("Erro ao buscar transações por usuario_id:", error.message);
-        throw new Error("Erro ao buscar transações por usuario_id: " + error.message);
+    
+            let whereClause;
+            if (userData.aluno) {
+                whereClause = { aluno_id: userData.aluno.idaluno }; 
+            } else if (userData.professor) {
+                whereClause = { professor_id: userData.professor.idprofessor }; 
+            } else {
+                whereClause = { usuario_id: parseInt(usuarioId) };
+            }
+    
+            const transacoes = await prismaClient.transacao.findMany({
+                where: whereClause,
+                include: {
+                    aluno: true,
+                    professor: true,
+                    usuario: true
+                }
+            });
+    
+            return transacoes;
+        } catch (error) {
+            console.error("Erro ao buscar transações por usuário:", error.message);
+            throw new Error("Erro ao buscar transações por usuário: " + error.message);
+        }
     }
-}
-
+    
 }
 
 export default new TransacaoService();

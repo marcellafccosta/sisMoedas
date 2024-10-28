@@ -1,73 +1,144 @@
 import React, { useEffect, useState } from "react";
-import { Descriptions, Card, Button } from 'antd';
+import { Table, Card, Button } from 'antd';
 import { useParams, Link } from 'react-router-dom';
+import AppHeader from "../components/Header";
+import "../styles/Extrato.css";
 
 const Extrato = () => {
-    const { idUsuario } = useParams(); // Captura o ID do usuário da URL
-    console.log("ID do Usuário:", idUsuario); // Verifica se o ID é capturado corretamente
-    const [transacoes, setTransacoes] = useState([]); // Estado para armazenar as transações
-    const [loading, setLoading] = useState(true); // Estado de carregamento
-    const [error, setError] = useState(null); // Estado para erros
+    const { idUsuario } = useParams(); 
+    const [transacoes, setTransacoes] = useState([]); 
+    const [loading, setLoading] = useState(true); 
+    const [error, setError] = useState(null); 
+    const [saldoMoedas, setSaldoMoedas] = useState(0);
+    const [nomeUsuario, setNomeUsuario] = useState("");
+    const [isAluno, setIsAluno] = useState(null); 
+
+    useEffect(() => {
+        const fetchProfileData = async () => {
+            try {
+                const response = await fetch(`http://localhost:3000/api/usuario/${idUsuario}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setNomeUsuario(data.nome);
+                    
+                    if (data.aluno && data.aluno.length > 0) {
+                        setSaldoMoedas(data.aluno[0].saldomoedas || 0);
+                        setIsAluno(true); 
+                    } else if (data.professor && data.professor.length > 0) {
+                        setSaldoMoedas(data.professor[0].saldomoedas || 0);
+                        setIsAluno(false); 
+                    }
+                } else {
+                    setError('Erro ao buscar dados do perfil');
+                }
+            } catch (error) {
+                setError('Erro na requisição');
+                console.error("Erro ao buscar dados do perfil:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (idUsuario) {
+            fetchProfileData();
+        }
+    }, [idUsuario]);
 
     useEffect(() => {
         const fetchTransacoes = async () => {
-            if (!idUsuario) {
-                setError('ID do usuário não fornecido.');
-                setLoading(false);
-                return;
-            }
-            console.log("Buscando transações para ID:", idUsuario);
             try {
                 const response = await fetch(`http://localhost:3000/api/transacao/usuario/${idUsuario}`);
                 if (!response.ok) {
                     throw new Error('Erro ao buscar transações');
                 }
                 const data = await response.json();
-                setTransacoes(data); // Armazena as transações no estado
+                console.log("Dados das transações:", data); 
+
+                if (Array.isArray(data)) {
+                    const transacoesFiltradas = data.filter(transacao => 
+                        (isAluno === true && transacao.tipo === 'RecebimentoMoedas') || 
+                        (isAluno === false && transacao.tipo === 'EnvioMoedas')
+                    );
+                    setTransacoes(transacoesFiltradas);
+                } else {
+                    throw new Error('Formato inesperado de dados de transações');
+                }
             } catch (err) {
-                setError(err.message); // Armazena mensagem de erro
-            } finally {
-                setLoading(false); // Atualiza estado de carregamento
+                setError(err.message);
+                console.error("Erro ao buscar transações:", err);
             }
         };
 
-        fetchTransacoes(); // Chama a função para buscar transações
-    }, [idUsuario]); // Re-executa o efeito se o ID mudar
+        if (isAluno !== null) {
+            fetchTransacoes();
+        }
+    }, [idUsuario, isAluno]);
 
-    // Renderiza o componente
     if (loading) {
-        return <div>Carregando...</div>; // Mensagem de carregamento
+        return <div>Carregando...</div>; 
     }
 
-    if (error) {
-        return <div>Erro: {error}</div>; // Mensagem de erro
-    }
+    const columns = [
+        {
+            title: 'Tipo',
+            dataIndex: 'tipo',
+            key: 'tipo',
+        },
+        {
+            title: 'Quantidade',
+            dataIndex: 'quantidade',
+            key: 'quantidade',
+        },
+        {
+            title: 'Data',
+            dataIndex: 'data',
+            key: 'data',
+            render: (text) => {
+                try {
+                    return new Date(text).toLocaleString();
+                } catch {
+                    console.warn("Data inválida:", text);
+                    return "Data inválida";
+                }
+            },
+        },
+        {
+            title: 'Motivo',
+            dataIndex: 'motivo',
+            key: 'motivo',
+        },
+    ];
 
     return (
-        <div className="extrato-container">
-            <Card title={`Extrato do Usuário ${idUsuario}`} bordered>
-                <Link to={`/transacao/${idUsuario}`}>
-                    <Button type="primary" style={{ marginBottom: '20px' }}>
-                        Realizar Transação
-                    </Button>
-                </Link>
-                <Descriptions bordered column={1}>
-                    {transacoes.length === 0 ? (
-                        <Descriptions.Item label="Transações">Nenhuma transação encontrada.</Descriptions.Item>
-                    ) : (
-                        transacoes.map(transacao => (
-                            <Descriptions.Item key={transacao.idtransacao} label={`Transação ID: ${transacao.idtransacao}`}>
-                                <p><strong>Tipo:</strong> {transacao.tipo}</p>
-                                <p><strong>Quantidade:</strong> {transacao.quantidade}</p>
-                                <p><strong>Data:</strong> {new Date(transacao.data).toLocaleString()}</p>
-                                <p><strong>Motivo:</strong> {transacao.motivo}</p>
-                                <hr />
-                            </Descriptions.Item>
-                        ))
+        <>
+            <AppHeader />
+            <div className="extrato-container">
+                <Card title={`Extrato de ${nomeUsuario}`} bordered className="extrato-card">
+                    <div className="saldo">
+                        <p><strong>Saldo de Moedas:</strong> {saldoMoedas} moedas</p>
+                    </div>
+                    {!isAluno && (
+                        <div className="button-container">
+                            <Link to={`/transacao/${idUsuario}`}>
+                                <Button type="primary">Realizar Transação</Button>
+                            </Link>
+                        </div>
                     )}
-                </Descriptions>
-            </Card>
-        </div>
+                    <Table
+                        dataSource={transacoes}
+                        columns={columns}
+                        rowKey="idtransacao"
+                        locale={{ emptyText: 'Nenhuma transação encontrada.' }}
+                        className="transacoes-table"
+                    />
+                    {error && (
+                        <div className="error-message">
+                            <p>Erro ao buscar transações: {error}</p>
+                        </div>
+                    )}
+                </Card>
+            </div>
+        </>
     );
 };
 
