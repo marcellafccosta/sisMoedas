@@ -1,4 +1,5 @@
-# Sistema de Moedas
+# Sistema de Moedas - SmartCoins
+O SmartCoins é um sistema que visa reconhecer e incentivar o mérito acadêmico dos alunos através de uma moeda virtual. Professores podem distribuir moedas a alunos como forma de reconhecimento por bom comportamento e participação.
 
 ## Diagramas
 
