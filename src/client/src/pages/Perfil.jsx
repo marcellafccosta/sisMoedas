@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Descriptions, Button, Input, message, Card, Modal } from 'antd';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { useParams, Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import AppHeader from "../components/Header";
 import "../styles/Perfil.css";
 import { Typography, Grid } from "@mui/material";
+import { useNavigate } from 'react-router-dom';
 
 const Perfil = () => {
     const [profileData, setProfileData] = useState(null);
@@ -21,7 +21,7 @@ const Perfil = () => {
 
     useEffect(() => {
         const fetchProfileData = async () => {
-            console.log('ID do usuário:', idUsuario); // Log para verificar o ID
+            console.log('ID do usuário:', idUsuario); 
             try {
                 const response = await fetch(`http://localhost:3000/api/usuario/${idUsuario}`);
                 if (response.ok) {
@@ -43,7 +43,7 @@ const Perfil = () => {
                         }
                     } else if (data.professor && data.professor.length > 0) {
                         const professorId = data.professor[0].idprofessor;
-                        console.log('ID Professor:', professorId); // Verifique se o ID é válido
+                        console.log('ID Professor:', professorId); 
                         const professorResponse = await fetch(`http://localhost:3000/api/professor/${professorId}`);
                         if (professorResponse.ok) {
                             const professorData = await professorResponse.json();
@@ -70,7 +70,7 @@ const Perfil = () => {
                         setUserData(data);
                     }
                 } else {
-                    console.error('Erro ao buscar dados do perfil', response.status); // Logar o status de erro
+                    console.error('Erro ao buscar dados do perfil', response.status); 
                 }
             } catch (error) {
                 console.error('Erro na requisição:', error);
@@ -90,15 +90,13 @@ const Perfil = () => {
             let updatedData = { ...prevData };
             let current = updatedData;
 
-            // Navega pelo objeto até chegar na chave final
             for (let i = 0; i < keys.length - 1; i++) {
                 if (!current[keys[i]]) {
-                    current[keys[i]] = {}; // Cria o objeto se não existir
+                    current[keys[i]] = {}; 
                 }
                 current = current[keys[i]];
             }
 
-            // Atualiza o valor da última chave
             current[keys[keys.length - 1]] = value;
 
             return updatedData;
@@ -128,7 +126,7 @@ const Perfil = () => {
                 url = `http://localhost:3000/api/aluno/${userData.aluno.idaluno}`;
                 dataToSend = { ...userData.aluno };
             } else if (userData.professor && userData.professor.idprofessor) {
-                console.log('Dados do professor enviados:', userData.professor); // Log dos dados do professor
+                console.log('Dados do professor enviados:', userData.professor); 
                 url = `http://localhost:3000/api/professor/${userData.professor.idprofessor}`;
                 dataToSend = { ...userData.professor };
             } else if (userData.empresa && userData.empresa.idempresa) {
@@ -171,7 +169,7 @@ const Perfil = () => {
             content: 'Tem certeza de que deseja deletar esta conta? Esta ação não pode ser desfeita.',
             okText: 'Deletar',
             okType: 'danger',
-            
+
             cancelText: 'Cancelar',
             onOk: async () => {
                 try {
@@ -328,11 +326,22 @@ const Perfil = () => {
             </Descriptions.Item>
             <Descriptions.Item label="Instituição">
                 {isEditing ? (
-                    <Input name="professor.instituicao_id" value={userData.professor?.instituicao_id} onChange={handleInputChange} disabled />
+                    <Input
+                        name="professor.instituicao_id"
+                        value={userData.professor?.instituicao_id || ''}
+                        onChange={handleInputChange}
+                        disabled
+                    />
                 ) : (
-                    professor.instituicao_id
+                    professor.instituicao ? (
+                        `${professor.instituicao.idinstituicao} - ${professor.instituicao.nome}`
+                    ) : (
+                        "Informações indisponíveis"
+                    )
                 )}
             </Descriptions.Item>
+
+
             <Descriptions.Item label="Saldo Moedas">
                 {isEditing ? (
                     <Input name="professor.saldomoedas"
@@ -363,7 +372,7 @@ const Perfil = () => {
         if (empresa?.vantagem?.length > 0) {
             return (
                 <div className="vantagens-grid-container">
-                    <Grid container spacing={5}>
+                    <Grid container spacing={6}>
                         {empresa.vantagem.map((vantagem, index) => (
                             <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                                 <Link to={`/VantagemDetalhe/${vantagem.idvantagem}`} style={{ textDecoration: "none" }}>
@@ -394,82 +403,87 @@ const Perfil = () => {
                 </div>
             );
         } else {
-            return <p style={{ marginTop: '20px' }}>Não há vantagens cadastradas</p>;
+            return (
+                <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                    <p>Não há vantagens cadastradas</p>
+                    <Button
+                        type="primary"
+                        style={{ marginTop: '10px' }}
+                        onClick={() => window.location.href = '/cadastroVantagem'}
+                    >
+                        Adicionar Vantagem
+                    </Button>
+                </div>
+            );
         }
-    };
+    }       
 
 
 
 
     return (
-        <>
-            <AppHeader />
-            <div className="profile-container">
-                <Card
-                    title="Perfil do Usuário"
-                    bordered
-                    style={{ width: '100%', maxWidth: '800px', height: 'fit-content' }} // Ajuste aqui para garantir que o Card também se ajuste ao conteúdo
-                    extra={
-                        isEditing ? (
-                            <>
-                                <Button type="primary" onClick={handleSave}>Salvar</Button>
-                                <Button style={{ marginLeft: '10px' }} onClick={() => setIsEditing(false)}>Cancelar</Button>
-                            </>
-                        ) : (
-                            <><Button type="primary" onClick={handleEdit}>Editar</Button>
-                            <Button type="danger" style={{ marginLeft: '10px', backgroundColor:"#a22020", color:"white" }} onClick={handleDeleteAccount}>Deletar Conta</Button></>
-                        )
-                    }
-                >
-                    {profileData ? (
-                        <>
-                            <Descriptions bordered column={2}>
-                                <Descriptions.Item label="Nome">
-                                    {isEditing ? (
-                                        <Input name="nome" value={userData.nome || ''} onChange={handleInputChange} />
+        <><AppHeader /><div className="profile-container">
+            <Card
+                title="Perfil do Usuário"
+                bordered
+                style={{ width: '100%', maxWidth: '800px', height: 'fit-content' }} // Ajuste aqui para garantir que o Card também se ajuste ao conteúdo
+                extra={isEditing ? (
+                    <>
+                        <Button type="primary" onClick={handleSave}>Salvar</Button>
+                        <Button style={{ marginLeft: '10px' }} onClick={() => setIsEditing(false)}>Cancelar</Button>
+                    </>
+                ) : (
+                    <><Button type="primary" onClick={handleEdit}>Editar</Button>
+                        <Button type="danger" style={{ marginLeft: '10px', backgroundColor: "#a22020", color: "white" }} onClick={handleDeleteAccount}>Deletar Conta</Button></>
+                )}
+            >
+                {profileData ? (
+                    <>
+                        <Descriptions bordered column={2}>
+                            <Descriptions.Item label="Nome">
+                                {isEditing ? (
+                                    <Input name="nome" value={userData.nome || ''} onChange={handleInputChange} />
+                                ) : (
+                                    profileData.nome
+                                )}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="E-mail">
+                                {isEditing ? (
+                                    <Input name="email" value={userData.email || ''} onChange={handleInputChange} />
+                                ) : (
+                                    profileData.email
+                                )}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Senha">
+                                {showPassword ? (
+                                    isEditing ? (
+                                        <Input.Password name="senha" value={userData.senha || ''} onChange={handleInputChange} />
                                     ) : (
-                                        profileData.nome
-                                    )}
-                                </Descriptions.Item>
-                                <Descriptions.Item label="E-mail">
-                                    {isEditing ? (
-                                        <Input name="email" value={userData.email || ''} onChange={handleInputChange} />
-                                    ) : (
-                                        profileData.email
-                                    )}
-                                </Descriptions.Item>
-                                <Descriptions.Item label="Senha">
-                                    {showPassword ? (
-                                        isEditing ? (
-                                            <Input.Password name="senha" value={userData.senha || ''} onChange={handleInputChange} />
-                                        ) : (
-                                            profileData.senha
-                                        )
-                                    ) : (
-                                        '******'
-                                    )}
-                                    <Button
-                                        type="link"
-                                        onClick={togglePasswordVisibility}
-                                        icon={showPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
-                                        style={{ marginLeft: 10 }}
-                                    />
-                                </Descriptions.Item>
-                                {renderSpecificData()}
-                            </Descriptions>
-                            {profileData?.empresa?.length > 0 && (
-                                <div>
-                                    <h2 className="vantagens">Vantagens</h2>
-                                    {renderVantagensGrid(profileData.empresa[0])}
-                                </div>
-                            )}
-                        </>
-                    ) : (
-                        <p>Carregando dados do perfil...</p>
-                    )}
-                </Card>
-            </div>
-        </>
+                                        profileData.senha
+                                    )
+                                ) : (
+                                    '******'
+                                )}
+                                <Button
+                                    type="link"
+                                    onClick={togglePasswordVisibility}
+                                    icon={showPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+                                    style={{ marginLeft: 10 }} />
+                            </Descriptions.Item>
+                            {renderSpecificData()}
+                        </Descriptions>
+                        {profileData?.empresa?.length > 0 && (
+                            <div>
+                                <h2 className="vantagens">Vantagens</h2>
+                                {renderVantagensGrid(profileData.empresa[0])}
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    <p>Carregando dados do perfil...</p>
+                )}
+            </Card>
+        </div></>
     );
 };
 

@@ -1,42 +1,81 @@
-Extrato.css
-
 .extrato-container {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; 
+    min-height: 100vh;
     width: 100vw;
-    height: 100vh; 
-    margin: 0;
-}
-
-.saldo-card {
-    text-align: center;
+    height: fit-content;
+    max-height: 100vh; 
+    padding: 20px;
     background-color: #f0f2f5;
-    border: 1px solid #0f4c75;
-    width: 500px;
+    overflow-y: auto; 
 }
 
-.saldo-card h2 {
-    font-size: 2rem;
-    color: #0f4c75;
-    
+
+.extrato-card {
+    width: 100%;
+    max-width: 800px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.button-group {
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.transacoes-descriptions {
+    background-color: #fafafa;
+    padding: 20px;
+    border-radius: 8px;    
+}
+
+.transacoes-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.transacoes-table th, .transacoes-table td {
+    border: 1px solid #ccc;
+    padding: 12px;
+    text-align: left;
+}
+
+.transacoes-table th {
+    background-color: #007BFF;
+    color: white;
+}
+
+.transacoes-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+
+
+.saldo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.saldo p {
+    font-size: 18px;
+    font-weight: bold;
+    color: #0f4c75; /* Verde para o texto */
+    border: 2px solid #0f4c75; /* Borda verde para destaque */
+    padding: 10px 20px;
+    border-radius: 8px;
+    display: inline-block;
     text-align: center;
 }
 
-.button-group .ant-btn {
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
+.button-container {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-.button-group .ant-btn-primary {
-    background-color: #0f4c75;
-    border-color: #0f4c75;
-}
-
-.button-group .ant-btn-primary:hover {
-    background-color: #0f4c75;
-    border-color: #0f4c75;
+.transacoes-table {
+    margin-top: 20px;
 }

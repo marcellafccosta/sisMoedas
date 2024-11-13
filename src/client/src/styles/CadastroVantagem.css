@@ -1,30 +1,84 @@
-*{
-    margin: none;
-    overflow: hidden;
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
+/* Container principal de Cadastro de Vantagem */
 .cadastroVantagem-container {
-    background-color: #ffffff; 
-    padding: 40px; 
-    border-radius: 8px; 
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1); 
-    width: 100vw;
-    height: 100vh;
+  background-color: #f9fafb;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  width: 100vw;
+  min-height: 100vh;
+  max-height: 100vh; 
+  overflow-y: auto; 
+}
+
+/* Botão primário customizado */
+.ant-btn-primary {
+  background-color: #0f4c75;
+  border-color: #0f4c75;
+  color: white;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  border-radius: 6px;
+}
+
+.ant-btn-primary:hover {
+  background-color: #0d3b5d;
+  border-color: #0d3b5d;
+  transform: translateY(-2px); 
+}
+
+/* Espaçamento para upload */
+.ant-upload {
+  margin-top: 10px;
+}
+
+/* Botão de voltar */
+.ant-btn-default {
+  color: #555;
+  background-color: #f0f0f0;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  margin-right: 10px;
+}
+
+.ant-btn-default:hover {
+  color: #333;
+  background-color: #e0e0e0;
+}
+
+
+.back-button {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 15px;
+  font-size: 16px;
+  color: #0f4c75;
+}
+
+.back-button:hover {
+  color: #3282b8;
+}
+
+
+
+/* Ajuste de largura e responsividade */
+@media (max-width: 768px) {
+  .cadastroVantagem-container {
+      padding: 20px;
+      width: 90vw; 
+      height: auto; 
   }
-  
-  .ant-btn-primary {
-    background-color: #0f4c75; 
-    border-color: #0f4c75; 
-    width: 10vw;
+
+  .ant-btn-primary, .ant-btn-default {
+      width: 100%; 
+      margin-top: 10px;
   }
-  
-  .ant-btn-primary:hover {
-    background-color: #0f4c75;
-    border-color: #0f4c75; 
-  }
-  
-  .ant-upload {
-    margin-top: 10px; 
-  }
-  
-  
+}

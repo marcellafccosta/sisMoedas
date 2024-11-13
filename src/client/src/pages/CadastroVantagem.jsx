@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Upload, message, InputNumber, Select, Typography } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import AppHeader from '../components/Header';
-import "../styles/CadastroVantagem.css"; 
+import "../styles/CadastroVantagem.css";
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -26,14 +27,14 @@ const CadastroVantagem = () => {
 
   // Manipula o upload do arquivo e armazena no estado
   const handleUpload = (file) => {
-    setFile(file); 
+    setFile(file);
     return false;
   };
 
   // Envia o formulário
   const onFinish = async (values) => {
     const formData = new FormData();
-    formData.append('foto', file); 
+    formData.append('foto', file);
     formData.append('customoedas', values.customoedas);
     formData.append('descricao', values.descricao);
     formData.append('empresaparceira_id', empresaLogada); // Usa o ID da empresa logada
@@ -47,7 +48,7 @@ const CadastroVantagem = () => {
       if (response.ok) {
         message.success('Vantagem cadastrada com sucesso!');
         form.resetFields();
-        setFile(null); 
+        setFile(null);
         navigate('/vantagens');
       } else {
         message.error('Erro ao cadastrar vantagem.');
@@ -62,7 +63,11 @@ const CadastroVantagem = () => {
     <div>
       <AppHeader />
       <div className="cadastroVantagem-container">
-        <h2 style={{ textAlign: 'center', margin: '20px 0', marginTop: "-1vw", fontSize: "30px" }}>Cadastro de Vantagens</h2>
+        <div className="back-button" onClick={() => navigate('/vantagens')}>
+          <ArrowLeftOutlined />
+        </div>
+        <h2 style={{ textAlign: 'center', margin: '20px 0', marginTop: "-1vw", color: "#04448B" }}>Cadastro de Vantagens</h2>
+
         <Form
           form={form}
           layout="vertical"
@@ -113,7 +118,7 @@ const CadastroVantagem = () => {
             <Upload
               customRequest={({ file, onSuccess }) => {
                 handleUpload(file);
-                onSuccess(); 
+                onSuccess();
               }}
               maxCount={1}
             >

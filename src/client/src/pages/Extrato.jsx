@@ -1,34 +1,84 @@
-import React, { useState, useEffect } from "react";
-import { Table, Card, Row, Col, Button } from 'antd';
-import "../styles/Extrato.css";
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Table, Card, Button } from 'antd';
+import { useParams, Link } from 'react-router-dom';
 import AppHeader from "../components/Header";
+import "../styles/Extrato.css";
+
 const Extrato = () => {
-    const navigate = useNavigate();
-    const [transacoes, setTransacoes] = useState([]);
-    const [saldo, setSaldo] = useState(0);
+    const { idUsuario } = useParams(); 
+    const [transacoes, setTransacoes] = useState([]); 
+    const [loading, setLoading] = useState(true); 
+    const [error, setError] = useState(null); 
+    const [saldoMoedas, setSaldoMoedas] = useState(0);
+    const [nomeUsuario, setNomeUsuario] = useState("");
+    const [isAluno, setIsAluno] = useState(null); 
 
     useEffect(() => {
-        const transacoesMock = [
-            { key: '1', tipo: 'Crédito', quantidade: 50, data: '2024-10-20', descricao: 'Recebimento de Moedas' },
-            { key: '2', tipo: 'Débito', quantidade: 20, data: '2024-10-22', descricao: 'Troca por Recompensa' },
-            { key: '3', tipo: 'Débito', quantidade: 10, data: '2024-10-23', descricao: 'Envio de Moedas' },
-        ];
-        setTransacoes(transacoesMock);
+        const fetchProfileData = async () => {
+            try {
+                const response = await fetch(`http://localhost:3000/api/usuario/${idUsuario}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setNomeUsuario(data.nome);
+                    
+                    if (data.aluno && data.aluno.length > 0) {
+                        setSaldoMoedas(data.aluno[0].saldomoedas || 0);
+                        setIsAluno(true); 
+                    } else if (data.professor && data.professor.length > 0) {
+                        setSaldoMoedas(data.professor[0].saldomoedas || 0);
+                        setIsAluno(false); 
+                    }
+                } else {
+                    setError('Erro ao buscar dados do perfil');
+                }
+            } catch (error) {
+                setError('Erro na requisição');
+                console.error("Erro ao buscar dados do perfil:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-        const saldoAtual = transacoesMock.reduce((acc, transacao) => {
-            return transacao.tipo === 'Crédito' ? acc + transacao.quantidade : acc - transacao.quantidade;
-        }, 0);
+        if (idUsuario) {
+            fetchProfileData();
+        }
+    }, [idUsuario]);
 
-        setSaldo(saldoAtual);
-    }, []);
+    useEffect(() => {
+        const fetchTransacoes = async () => {
+            try {
+                const response = await fetch(`http://localhost:3000/api/transacao/usuario/${idUsuario}`);
+                if (!response.ok) {
+                    throw new Error('Erro ao buscar transações');
+                }
+                const data = await response.json();
+                console.log("Dados das transações:", data); 
+
+                if (Array.isArray(data)) {
+                    const transacoesFiltradas = data.filter(transacao => 
+                        (isAluno === true && transacao.tipo === 'RecebimentoMoedas') || 
+                        (isAluno === false && transacao.tipo === 'EnvioMoedas')
+                    );
+                    setTransacoes(transacoesFiltradas);
+                } else {
+                    throw new Error('Formato inesperado de dados de transações');
+                }
+            } catch (err) {
+                setError(err.message);
+                console.error("Erro ao buscar transações:", err);
+            }
+        };
+
+        if (isAluno !== null) {
+            fetchTransacoes();
+        }
+    }, [idUsuario, isAluno]);
+
+    if (loading) {
+        return <div>Carregando...</div>; 
+    }
 
     const columns = [
-        {
-            title: 'Descrição',
-            dataIndex: 'descricao',
-            key: 'descricao',
-        },
         {
             title: 'Tipo',
             dataIndex: 'tipo',
@@ -38,48 +88,57 @@ const Extrato = () => {
             title: 'Quantidade',
             dataIndex: 'quantidade',
             key: 'quantidade',
-            render: (text) => `${text} moedas`,
         },
         {
             title: 'Data',
             dataIndex: 'data',
             key: 'data',
+            render: (text) => {
+                try {
+                    return new Date(text).toLocaleString();
+                } catch {
+                    console.warn("Data inválida:", text);
+                    return "Data inválida";
+                }
+            },
+        },
+        {
+            title: 'Motivo',
+            dataIndex: 'motivo',
+            key: 'motivo',
         },
     ];
 
-
-    const handleEnviarMoedas = () => {
-        navigate('/');
-    };
-
-    const handleVerVantagens = () => {
-        navigate('/');
-    };
-
     return (
-        <><AppHeader />
-        <div className="extrato-container">
-            <Row gutter={[16, 16]}>
-                <Col span={24}>
-                    <Card className="saldo-card" title="Saldo Atual" bordered={false}>
-                        <h2>{saldo} Moedas</h2>
-                    </Card>
-                </Col>
-                <Col span={24}>
-                    <Card title="Extrato de Transações" bordered={false}>
-                        <Table columns={columns} dataSource={transacoes} pagination={false} />
-                    </Card>
-                </Col>
-                <Col span={24} className="button-group">
-                    <Button type="primary" onClick={handleEnviarMoedas} style={{ marginRight: '10px' }}>
-                        Enviar Moedas
-                    </Button>
-                    <Button type="default" onClick={handleVerVantagens}>
-                        Ver Vantagens
-                    </Button>
-                </Col>
-            </Row>
-        </div></>
+        <>
+            <AppHeader />
+            <div className="extrato-container">
+                <Card title={`Extrato de ${nomeUsuario}`} bordered className="extrato-card">
+                    <div className="saldo">
+                        <p><strong>Saldo de Moedas:</strong> {saldoMoedas} moedas</p>
+                    </div>
+                    {!isAluno && (
+                        <div className="button-container">
+                            <Link to={`/transacao/${idUsuario}`}>
+                                <Button type="primary">Realizar Transação</Button>
+                            </Link>
+                        </div>
+                    )}
+                    <Table
+                        dataSource={transacoes}
+                        columns={columns}
+                        rowKey="idtransacao"
+                        locale={{ emptyText: 'Nenhuma transação encontrada.' }}
+                        className="transacoes-table"
+                    />
+                    {error && (
+                        <div className="error-message">
+                            <p>Erro ao buscar transações: {error}</p>
+                        </div>
+                    )}
+                </Card>
+            </div>
+        </>
     );
 };
 

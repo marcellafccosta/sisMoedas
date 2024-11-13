@@ -2,11 +2,12 @@ import React from 'react';
 import { Button, Row, Col } from 'antd';
 import { Link } from 'react-router-dom';
 import "../styles/Home.css";
-import logo from "../assets/LogoSisMoeda.svg"; // Certifique-se de que o caminho da imagem está correto
+import logo from "../assets/LogoSisMoeda.svg"; 
+import AppHeader from '../components/Header';
 
 const Home = () => {
     return (
-        <div className="homepage-container">
+        <><AppHeader /><div className="homepage-container">
             <div className="hero-section">
                 <img src={logo} alt="Logo SisMoedas" className="hero-logo" />
                 <h1>Bem-vindo ao SisMoedas</h1>
@@ -46,7 +47,7 @@ const Home = () => {
                     </Col>
                 </Row>
             </div>
-        </div>
+        </div></>
     );
 };
 

@@ -9,6 +9,7 @@ import Extrato from './pages/Extrato.jsx';
 import CadastroVantagem from './pages/CadastroVantagem.jsx';
 import Vantagens from './pages/Vantagens.jsx';
 import VantagemDetalhe from './pages/VantagemDetalhe.jsx';
+import Transacao from './pages/Transacao.jsx';
 
 
 function App() {
@@ -19,10 +20,13 @@ function App() {
       <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} /> 
         <Route path="/perfil/:idUsuario" element={<Perfil />} /> 
-        <Route path="/extrato" element={<Extrato />} /> 
+        <Route path="/extrato/:idUsuario" element={<Extrato />} /> 
         <Route path="/cadastroVantagem" element={<CadastroVantagem />} /> 
         <Route path="/Vantagens" element={<Vantagens />} /> 
         <Route path="/VantagemDetalhe/:id" element={<VantagemDetalhe />} /> 
+        <Route path="/transacao/:idUsuario" element={<Transacao />} /> 
+
+        
       </Routes>
     </Router>
   );

@@ -88,4 +88,28 @@ export class TransacaoController {
             res.status(500).json({ message: 'Não foi possível deletar a transação. Tente novamente mais tarde.' });
         }
     }
+
+    // Função para buscar transações por usuário ID
+    async getByUsuarioId(req, res) {
+        try {
+            const { usuarioId } = req.params;
+
+            if (isNaN(parseInt(usuarioId))) {
+                return res.status(400).json({ message: 'ID de usuário inválido.' });
+            }
+
+            const transacoes = await TransacaoService.getByUsuarioId(usuarioId);
+            
+            if (transacoes && transacoes.length > 0) {
+                res.status(200).json(transacoes);
+            } else {
+                res.status(404).json({ message: `Nenhuma transação encontrada para o usuário com ID ${usuarioId}.` });
+            }
+        } catch (error) {
+            console.error("Erro ao buscar transações por usuario_id:", error.message);
+            res.status(500).json({ message: 'Não foi possível recuperar as transações. Tente novamente mais tarde.' });
+        }
+    }
 }
+
+export default new TransacaoController();
