@@ -30,6 +30,12 @@ Este projeto foi desenvolvido utilizando uma combinação de tecnologias moderna
  <img src="docs/diagramas/Diagrama de Classe - SisMoedas.png" width="76%">
 </div>
 
+### Diagrama de Sequencia
+
+<div>
+ <img src="docs/diagramas/diagramaDeSequencia.svg" width="76%">
+</div>
+
 
 ### Diagrama de Componentes
 
