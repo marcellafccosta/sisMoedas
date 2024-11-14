@@ -102,4 +102,18 @@ export class AlunoController {
             res.status(500).json({ message: 'Não foi possível deletar o aluno. Tente novamente mais tarde.' });
         }
     }
+
+    async updateSaldo(req, res) {
+        const { alunoId } = req.params;  // ID do aluno passado como parâmetro na URL
+        const { novoSaldo } = req.body;  // Novo saldo enviado no corpo da requisição
+    
+        try {
+            // Chama o serviço para atualizar o saldo
+            const alunoAtualizado = await AlunoService.updateSaldo(alunoId, novoSaldo);
+            res.status(200).json(alunoAtualizado);  // Retorna o aluno atualizado como resposta
+        } catch (error) {
+            console.error("Erro ao atualizar saldo:", error.message);
+            res.status(500).json({ error: "Erro ao atualizar saldo: " + error.message });
+        }
+    }
 }

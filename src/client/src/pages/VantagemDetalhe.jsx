@@ -66,7 +66,6 @@ const VantagemDetalhe = () => {
     formData.append("descricao", values.descricao);
     formData.append("customoedas", parseFloat(values.customoedas));
 
-    
     if (values.foto && values.foto.length > 0) {
         formData.append("foto", values.foto[0].originFileObj);
     }
@@ -94,7 +93,48 @@ const VantagemDetalhe = () => {
             description: error.message,
         });
     }
-};
+  };
+
+  const handleTrocarVantagem = async () => {
+    const idAluno = localStorage.getItem('idaluno');
+    try {
+      const response = await fetch(`http://localhost:3000/api/vantagem/trocar-vantagem`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          idVantagem: id,
+          idAluno: idAluno, 
+        }),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Erro ao trocar a vantagem");
+      }
+  
+      const data = await response.json();
+      
+      setVantagem((prev) => ({
+        ...prev,
+        saldoAtual: data.saldoAtual, 
+      }));
+      
+      
+      notification.success({
+        message: "Troca realizada com sucesso!",
+        description: data.message || "A troca de vantagem foi realizada com sucesso.",
+      });
+    } catch (error) {
+      
+      notification.error({
+        message: "Erro na troca",
+        description: error.message,
+      });
+    }
+  };
+  
 
   if (loading) {
     return <Spin size="large" style={{ display: "block", margin: "auto", marginTop: "20%" }} />; 
@@ -153,8 +193,11 @@ const VantagemDetalhe = () => {
             <Button type="primary" style={{ marginRight: "8px" }} onClick={editMode ? () => handleSave(vantagem) : handleEditToggle}>
               {editMode ? "Salvar" : "Editar"}
             </Button>
-            <Button type="danger" onClick={handleDelete}>
+            <Button type="danger" style={{ marginRight: "8px" }} onClick={handleDelete}>
               Excluir
+            </Button>
+            <Button type="default" onClick={handleTrocarVantagem}>
+              Trocar Vantagem
             </Button>
           </div>
         </Card>
