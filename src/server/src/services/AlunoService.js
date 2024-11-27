@@ -145,7 +145,20 @@ export class AlunoService {
             throw new Error("Erro ao atualizar aluno: " + error.message);
         }
     }
-    
+    async updateSaldo(alunoId, novoSaldo) {
+        try {
+            const alunoAtualizado = await prismaClient.aluno.update({
+                where: { idaluno: parseInt(alunoId) },
+                data: {
+                    saldomoedas: novoSaldo
+                }
+            });
+            return alunoAtualizado;
+        } catch (error) {
+            console.error("Erro ao atualizar saldo: ", error.message);
+            throw new Error("Erro ao atualizar saldo: " + error.message);
+        }
+    }
 
     // Deleta um aluno pelo ID
     async deleteAluno(id) {

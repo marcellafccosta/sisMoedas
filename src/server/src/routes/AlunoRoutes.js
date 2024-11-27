@@ -11,5 +11,6 @@ router.get('/:id', (req, res) => alunoController.getById(req, res));
 router.post('/', (req, res) => alunoController.createAluno(req, res));
 router.delete('/:id', (req, res) => alunoController.deleteAluno(req, res));
 router.put('/:id', (req, res) => alunoController.updateAluno(req, res));
+router.put('/:id/saldo', (req, res) => alunoController.updateSaldo(req, res));
 
 export { router as AlunoRoutes }

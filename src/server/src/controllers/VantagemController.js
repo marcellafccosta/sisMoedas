@@ -1,5 +1,6 @@
 import VantagemService from '../services/VantagemService.js';
-
+import TransacaoService from '../services/TransacaoService.js';
+import AlunoService from '../services/AlunoService.js'; // Para obter dados do aluno
 export class VantagemController {
     // Função para buscar todas as vantagens
     async getAll(req, res) {
@@ -99,6 +100,48 @@ export class VantagemController {
         } catch (error) {
             console.error("Erro ao deletar vantagem:", error.message);
             res.status(500).json({ message: "Não foi possível deletar a vantagem. Tente novamente mais tarde." });
+        }
+    }
+
+    async trocarVantagem(req, res) {
+        try {
+            const { idVantagem, idAluno } = req.body;
+
+            // Verifica se o usuário logado é um aluno
+            const aluno = await AlunoService.getById(idAluno);
+            if (!aluno) {
+                return res.status(403).json({ message: "Apenas alunos podem trocar vantagens." });
+            }
+
+            // Busca a vantagem e verifica o custo
+            const vantagem = await VantagemService.getById(idVantagem);
+            if (!vantagem) {
+                return res.status(404).json({ message: "Vantagem não encontrada." });
+            }
+
+            // Verifica se o aluno tem saldo suficiente
+            if (aluno.saldomoedas < vantagem.customoedas) {
+                return res.status(400).json({ message: "Saldo insuficiente para realizar a troca." });
+            }
+
+            // Desconta o saldo do aluno e atualiza a transação
+            aluno.saldomoedas -= vantagem.customoedas;
+            await AlunoService.updateSaldo(idAluno, aluno.saldomoedas); // Função para atualizar o saldo do aluno
+
+            // Cria uma nova transação de troca
+            await TransacaoService.createTransacao({
+                tipo: "TrocaMoedas",
+                quantidade: -vantagem.customoedas,
+                data: new Date(),
+                aluno_id: idAluno,
+                usuario_id: aluno.usuario_id,
+                motivo: `Troca pela vantagem: ${vantagem.descricao}`
+            });
+
+            res.status(200).json({ message: "Vantagem trocada com sucesso.", saldoAtual: aluno.saldomoedas });
+        } catch (error) {
+            console.error("Erro ao trocar vantagem:", error.message);
+            res.status(500).json({ message: "Não foi possível realizar a troca. Tente novamente mais tarde." });
         }
     }
 }

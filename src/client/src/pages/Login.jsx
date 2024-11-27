@@ -29,6 +29,20 @@ const Login = () => {
         } else {
           console.error("ID da empresa não retornado");
         }
+        if (usuario && usuario.aluno && usuario.aluno.length > 0) {
+          const idAluno = usuario.aluno[0].idaluno; // Ajuste conforme a estrutura da resposta
+          localStorage.setItem('idaluno', idAluno); // Salva o ID do aluno no localStorage
+          navigate('/cadastrovantagem'); // Redireciona após login
+      } else {
+          console.error("ID do aluno não retornado");
+      }
+      if (usuario && usuario.professor && usuario.professor.length > 0) {
+        const idProfessor = usuario.professor[0].idprofessor; // Ajuste conforme a estrutura da resposta
+        localStorage.setItem('idprofessor', idProfessor); // Salva o ID do aluno no localStorage
+        navigate('/cadastrovantagem'); // Redireciona após login
+    } else {
+        console.error("ID do professor não retornado");
+    }
 
         // Verifica se o ID do usuário está na resposta
         if (usuario && usuario.idusuario) {
@@ -38,7 +52,7 @@ const Login = () => {
         } else {
             message.error("ID do usuário não encontrado na resposta.");
             return;
-        }
+        } 
 
         localStorage.setItem('token', token); 
 

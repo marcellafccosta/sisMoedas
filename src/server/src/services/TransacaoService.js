@@ -28,7 +28,9 @@ export class TransacaoService {
                     professor: true,
                     usuario: true // Inclui os dados do usuário relacionado
                 }
+                
             });
+            console.log("Transações encontradas:", transacao);
             if (!transacao) {
                 throw new Error("Transação não encontrada");
             }
@@ -42,40 +44,48 @@ export class TransacaoService {
     // Cria uma nova transação
     async createTransacao(transacaoData) {
         try {
-            // Cria a transação para o professor com o tipo `EnvioMoedas`
-            const transacaoProfessor = await prismaClient.transacao.create({
-                data: {
-                    tipo: 'EnvioMoedas', // Define o tipo como EnvioMoedas para o professor
-                    quantidade: transacaoData.quantidade,
-                    data: transacaoData.data,
-                    professor: { connect: { idprofessor: parseInt(transacaoData.professor_id) } },
-                    usuario: { connect: { idusuario: parseInt(transacaoData.usuario_id) } },
-                    motivo: transacaoData.motivo
-                }
-            });
-    
-            // Se um aluno está associado, cria uma transação complementar para ele
+            let transacaoProfessor = null;
             let transacaoAluno = null;
-            if (transacaoData.aluno_id) {
-                transacaoAluno = await prismaClient.transacao.create({
+    
+            // Cria a transação para o professor com o tipo `EnvioMoedas`
+            if (transacaoData.professor_id) {
+                transacaoProfessor = await prismaClient.transacao.create({
                     data: {
-                        tipo: 'RecebimentoMoedas', // Define o tipo como RecebimentoMoedas para o aluno
+                        tipo: 'EnvioMoedas', 
                         quantidade: transacaoData.quantidade,
                         data: transacaoData.data,
-                        aluno: { connect: { idaluno: parseInt(transacaoData.aluno_id) } },
-                        usuario: { connect: { idusuario: parseInt(transacaoData.usuario_id) } }, // Conecte o campo usuario para o aluno
+                        professor: { connect: { idprofessor: parseInt(transacaoData.professor_id) } },
+                        usuario: { connect: { idusuario: parseInt(transacaoData.usuario_id) } },
                         motivo: transacaoData.motivo
                     }
                 });
             }
     
-            // Retorna ambas as transações para confirmação
+            // Se um aluno está associado, cria a transação correspondente para ele
+           if (transacaoData.aluno_id) {
+    const tipoTransacaoAluno = transacaoData.tipo || (transacaoData.quantidade < 0 ? 'TrocaMoedas' : 'RecebimentoMoedas');
+
+    transacaoAluno = await prismaClient.transacao.create({
+        data: {
+            tipo: tipoTransacaoAluno,  // Certifique-se de que 'TrocaMoedas' seja passado aqui quando necessário
+            quantidade: transacaoData.quantidade,
+            data: transacaoData.data,
+            aluno: { connect: { idaluno: parseInt(transacaoData.aluno_id) } },
+            usuario: { connect: { idusuario: parseInt(transacaoData.usuario_id) } },
+            motivo: transacaoData.motivo
+        }
+    });
+}
+
+    
             return { transacaoProfessor, transacaoAluno };
         } catch (error) {
             console.error("Erro ao cadastrar transação:", error.message);
             throw new Error("Erro ao cadastrar transação: " + error.message);
         }
     }
+    
+    
     
     
     // Atualiza uma transação existente

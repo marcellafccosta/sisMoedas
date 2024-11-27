@@ -46,7 +46,7 @@ export class UsuarioController {
       
           const usuario = await prismaClient.usuario.findUnique({
             where: { email },
-            include: { empresa: true }, // Inclua empresa para trazer os dados relacionados
+            include: { empresa: true, aluno:true, professor:true }, // Inclua empresa para trazer os dados relacionados
           });
       
           if (!usuario) {
@@ -66,7 +66,9 @@ export class UsuarioController {
               idusuario: usuario.idusuario,
               nome: usuario.nome,
               email: usuario.email,
-              empresa: usuario.empresa // Inclua o array `empresa` completo
+              empresa: usuario.empresa, // Inclua o array `empresa` completo
+              aluno: usuario.aluno, 
+              professor: usuario.professor
             }
           });
         } catch (error) {
